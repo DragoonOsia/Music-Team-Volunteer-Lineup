@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import GuitarLogo from "@/components/GuitarLogo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -29,15 +30,16 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <header className="border-b border-black/10 dark:border-white/10">
+        <header className="border-b border-border bg-surface">
           <nav className="mx-auto flex max-w-3xl items-center gap-6 px-4 py-4 text-sm">
-            <Link href="/" className="font-semibold">
+            <Link href="/" className="flex items-center gap-2 font-medium">
+              <GuitarLogo />
               Worship Team Lineup
             </Link>
-            <Link href="/" className="text-black/60 hover:text-black dark:text-white/60 dark:hover:text-white">
+            <Link href="/" className="text-muted hover:text-foreground">
               Services
             </Link>
-            <Link href="/volunteers" className="text-black/60 hover:text-black dark:text-white/60 dark:hover:text-white">
+            <Link href="/volunteers" className="text-muted hover:text-foreground">
               Volunteers
             </Link>
           </nav>

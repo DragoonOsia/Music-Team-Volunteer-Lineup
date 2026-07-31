@@ -18,18 +18,18 @@ export default function AddPlaylistModal({ serviceId }: { serviceId: string }) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-md border border-black/15 px-4 py-2 text-sm font-medium dark:border-white/15"
+        className="rounded-md border border-border-strong px-4 py-2 text-sm font-medium"
       >
         Add Playlist
       </button>
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
           onClick={() => setOpen(false)}
         >
           <div
-            className="w-full max-w-sm rounded-lg bg-white p-6 dark:bg-black dark:border dark:border-white/15"
+            className="w-full max-w-sm rounded-lg border border-border bg-surface-2 p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="mb-4 text-lg font-semibold">Add Playlist</h2>
@@ -44,21 +44,21 @@ export default function AddPlaylistModal({ serviceId }: { serviceId: string }) {
                   type="url"
                   required
                   placeholder="https://..."
-                  className="w-full rounded-md border border-black/15 px-3 py-2 text-sm dark:border-white/15 dark:bg-transparent"
+                  className="w-full rounded-md border border-border-strong bg-transparent px-3 py-2 text-sm"
                 />
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="rounded-md px-4 py-2 text-sm text-black/60 dark:text-white/60"
+                  className="rounded-md px-4 py-2 text-sm text-muted hover:text-foreground"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background disabled:opacity-50"
+                  className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-foreground hover:bg-accent-hover disabled:opacity-50"
                 >
                   Save
                 </button>

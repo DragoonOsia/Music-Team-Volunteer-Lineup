@@ -5,6 +5,7 @@ import AddSongModal from "@/components/AddSongModal";
 import AddPlaylistModal from "@/components/AddPlaylistModal";
 import ServiceActionsMenu from "@/components/ServiceActionsMenu";
 import ServiceLineupTabs from "@/components/ServiceLineupTabs";
+import SongKeyModal from "@/components/SongKeyModal";
 
 function formatDate(dateStr: string) {
   return new Date(`${dateStr}T00:00:00`).toLocaleDateString(undefined, {
@@ -35,7 +36,7 @@ export default async function ServiceDetailPage({
 
   const [{ data: songs }, { data: playlists }, { data: teams }, { data: roles }, { data: volunteers }, { data: assignments }] =
     await Promise.all([
-      supabase.from("songs").select("id, name, singer_or_band, version, url").eq("service_id", id).order("created_at"),
+      supabase.from("songs").select("id, name, singer_or_band, version, url, key, bpm").eq("service_id", id).order("created_at"),
       supabase.from("playlists").select("id, url").eq("service_id", id).order("created_at"),
       supabase.from("teams").select("id, name").order("sort_order"),
       supabase.from("roles").select("id, name, instrument").order("sort_order"),
@@ -49,13 +50,13 @@ export default async function ServiceDetailPage({
         <div>
           <h1 className="text-xl font-semibold">{formatDate(service.service_date)}</h1>
           {service.title && (
-            <p className="text-sm text-black/60 dark:text-white/60">{service.title}</p>
+            <p className="text-sm text-muted">{service.title}</p>
           )}
         </div>
         <form action={deleteService.bind(null, service.id)}>
           <button
             type="submit"
-            className="text-sm text-black/50 hover:text-red-600 dark:text-white/50"
+            className="text-sm text-muted hover:text-danger"
           >
             Delete service
           </button>
@@ -70,12 +71,18 @@ export default async function ServiceDetailPage({
 
       <div>
         <h2 className="mb-2 text-base font-semibold">Songs</h2>
-        <ul className="divide-y divide-black/10 dark:divide-white/10">
+        <ul className="divide-y divide-border">
           {(songs ?? []).map((song) => (
             <li key={song.id} className="flex items-center justify-between gap-3 py-3">
               <div>
-                <div className="font-medium">{song.name}</div>
-                <div className="text-sm text-black/60 dark:text-white/60">
+                <div className="flex items-center gap-2 font-medium">
+                  {song.name}
+                  <SongKeyModal serviceId={service.id} songId={song.id} currentKey={song.key} />
+                  {song.bpm !== null && (
+                    <span className="text-xs text-muted">{song.bpm} BPM</span>
+                  )}
+                </div>
+                <div className="text-sm text-muted">
                   {[song.singer_or_band, song.version].filter(Boolean).join(" — ")}
                   {song.url && (
                     <>
@@ -95,7 +102,7 @@ export default async function ServiceDetailPage({
               <form action={deleteSong.bind(null, service.id, song.id)}>
                 <button
                   type="submit"
-                  className="text-sm text-black/50 hover:text-red-600 dark:text-white/50"
+                  className="text-sm text-muted hover:text-danger"
                 >
                   Remove
                 </button>
@@ -103,7 +110,7 @@ export default async function ServiceDetailPage({
             </li>
           ))}
           {(!songs || songs.length === 0) && (
-            <li className="py-6 text-center text-sm text-black/50 dark:text-white/50">
+            <li className="py-6 text-center text-sm text-muted">
               No songs added yet.
             </li>
           )}
@@ -113,7 +120,7 @@ export default async function ServiceDetailPage({
       {(playlists ?? []).length > 0 && (
         <div>
           <h2 className="mb-2 text-base font-semibold">Playlists</h2>
-          <ul className="divide-y divide-black/10 dark:divide-white/10">
+          <ul className="divide-y divide-border">
             {(playlists ?? []).map((playlist) => (
               <li key={playlist.id} className="flex items-center justify-between gap-3 py-2">
                 <a
@@ -127,7 +134,7 @@ export default async function ServiceDetailPage({
                 <form action={deletePlaylist.bind(null, service.id, playlist.id)}>
                   <button
                     type="submit"
-                    className="text-sm text-black/50 hover:text-red-600 dark:text-white/50"
+                    className="text-sm text-muted hover:text-danger"
                   >
                     Remove
                   </button>

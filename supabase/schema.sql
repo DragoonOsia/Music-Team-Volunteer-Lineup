@@ -78,6 +78,8 @@ create table if not exists songs (
   sort_order integer not null default 0,
   created_at timestamptz not null default now()
 );
+alter table songs add column if not exists key text;
+alter table songs add column if not exists bpm integer;
 create index if not exists songs_service_id_idx on songs(service_id);
 
 -- Playlist links for a service

@@ -14,21 +14,21 @@ export default async function VolunteersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold">Volunteers</h1>
-          <p className="text-sm text-black/60 dark:text-white/60">
+          <p className="text-sm text-muted">
             Everyone who can be scheduled onto a team.
           </p>
         </div>
         <AddVolunteerModal />
       </div>
 
-      <ul className="divide-y divide-black/10 dark:divide-white/10">
+      <ul className="divide-y divide-border">
         {(volunteers ?? []).map((v) => (
           <li key={v.id} className="flex items-center justify-between gap-3 py-3">
             <div>
               <div className="font-medium">
                 {v.name}
                 {v.nickname && (
-                  <span className="text-black/50 dark:text-white/50"> &quot;{v.nickname}&quot;</span>
+                  <span className="text-muted"> &quot;{v.nickname}&quot;</span>
                 )}
               </div>
               {v.instruments.length > 0 && (
@@ -36,7 +36,7 @@ export default async function VolunteersPage() {
                   {v.instruments.map((inst) => (
                     <span
                       key={inst}
-                      className="rounded-full bg-black/5 px-2 py-0.5 text-xs dark:bg-white/10"
+                      className="rounded-full bg-surface-2 px-2 py-0.5 text-xs"
                     >
                       {inst}
                     </span>
@@ -47,7 +47,7 @@ export default async function VolunteersPage() {
             <form action={deleteVolunteer.bind(null, v.id)}>
               <button
                 type="submit"
-                className="text-sm text-black/50 hover:text-red-600 dark:text-white/50"
+                className="text-sm text-muted hover:text-danger"
               >
                 Remove
               </button>
@@ -55,7 +55,7 @@ export default async function VolunteersPage() {
           </li>
         ))}
         {(!volunteers || volunteers.length === 0) && (
-          <li className="py-6 text-center text-sm text-black/50 dark:text-white/50">
+          <li className="py-6 text-center text-sm text-muted">
             No volunteers yet. Add your first one above.
           </li>
         )}

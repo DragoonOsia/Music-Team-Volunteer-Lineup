@@ -132,6 +132,8 @@ export type Database = {
           singer_or_band: string | null;
           version: string | null;
           url: string | null;
+          key: string | null;
+          bpm: number | null;
           sort_order: number;
           created_at: string;
         };
@@ -142,6 +144,8 @@ export type Database = {
           singer_or_band?: string | null;
           version?: string | null;
           url?: string | null;
+          key?: string | null;
+          bpm?: number | null;
           sort_order?: number;
           created_at?: string;
         };
@@ -152,6 +156,8 @@ export type Database = {
           singer_or_band?: string | null;
           version?: string | null;
           url?: string | null;
+          key?: string | null;
+          bpm?: number | null;
           sort_order?: number;
           created_at?: string;
         };

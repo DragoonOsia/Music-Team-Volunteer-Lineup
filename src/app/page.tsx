@@ -25,19 +25,19 @@ export default async function Home() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold">Services</h1>
-          <p className="text-sm text-black/60 dark:text-white/60">
+          <p className="text-sm text-muted">
             Pick a service to see its setlist and lineup.
           </p>
         </div>
         <Link
           href="/services/new"
-          className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background"
+          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-foreground hover:bg-accent-hover"
         >
           New Service
         </Link>
       </div>
 
-      <ul className="divide-y divide-black/10 dark:divide-white/10">
+      <ul className="divide-y divide-border">
         {(services ?? []).map((service) => (
           <li key={service.id}>
             <Link
@@ -53,7 +53,7 @@ export default async function Home() {
           </li>
         ))}
         {(!services || services.length === 0) && (
-          <li className="py-6 text-center text-sm text-black/50 dark:text-white/50">
+          <li className="py-6 text-center text-sm text-muted">
             No services yet. Create one to start building a lineup.
           </li>
         )}

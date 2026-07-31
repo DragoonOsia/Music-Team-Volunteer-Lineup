@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { updateServiceLineupAssignment } from "@/lib/actions";
+import VolunteerCombobox from "@/components/VolunteerCombobox";
 
 type Team = { id: string; name: string };
 type Role = { id: string; name: string; instrument: string | null };
@@ -30,17 +31,28 @@ export default function ServiceLineupTabs({
       .map((a) => [a.role_id, a.person_id])
   );
 
+  // Error catcher: once someone is booked into a non-Vocals role, hide them
+  // from every other non-Vocals role in this team so they can't accidentally
+  // be double-booked on two instruments at once. Vocals roles are exempt.
+  const bookedElsewhereNonVocals = (roleId: string) =>
+    new Set(
+      roles
+        .filter((r) => r.instrument !== "Vocals" && r.id !== roleId)
+        .map((r) => assignmentByRole.get(r.id))
+        .filter((id): id is string => Boolean(id))
+    );
+
   return (
     <div>
-      <div className="mb-3 flex gap-2 border-b border-black/10 dark:border-white/10">
+      <div className="mb-3 flex gap-2 border-b border-border">
         {teams.map((team) => (
           <button
             key={team.id}
             onClick={() => setActiveTeamId(team.id)}
             className={`-mb-px border-b-2 px-3 py-2 text-sm font-medium ${
               team.id === activeTeamId
-                ? "border-foreground"
-                : "border-transparent text-black/50 hover:text-black dark:text-white/50 dark:hover:text-white"
+                ? "border-accent"
+                : "border-transparent text-muted hover:text-foreground"
             }`}
           >
             {team.name}
@@ -48,40 +60,35 @@ export default function ServiceLineupTabs({
         ))}
       </div>
 
-      <div className="divide-y divide-black/10 rounded-lg border border-black/10 px-4 dark:divide-white/10 dark:border-white/10">
+      <div className="divide-y divide-border rounded-lg border border-border px-4">
         {roles.map((role) => {
-          const eligible = volunteers.filter((v) =>
-            role.instrument ? v.instruments.includes(role.instrument) : true
+          const excluded = bookedElsewhereNonVocals(role.id);
+          const eligible = volunteers.filter(
+            (v) =>
+              (role.instrument ? v.instruments.includes(role.instrument) : true) &&
+              !excluded.has(v.id)
           );
           const currentPersonId = assignmentByRole.get(role.id) ?? null;
 
           return (
             <div key={role.id} className="flex items-center justify-between gap-4 py-2">
               <span className="text-sm font-medium">{role.name}</span>
-              <select
+              <VolunteerCombobox
                 key={`${activeTeamId}_${role.id}`}
-                defaultValue={currentPersonId ?? ""}
+                value={currentPersonId}
+                volunteers={eligible}
                 disabled={isPending}
-                onChange={(e) => {
-                  const personId = e.target.value;
+                onChange={(personId) => {
                   startTransition(() => {
                     updateServiceLineupAssignment(serviceId, activeTeamId, role.id, personId);
                   });
                 }}
-                className="min-w-[180px] rounded-md border border-black/15 bg-white px-3 py-1.5 text-sm disabled:opacity-50 dark:border-white/15 dark:bg-black"
-              >
-                <option value="">— Unassigned —</option>
-                {eligible.map((v) => (
-                  <option key={v.id} value={v.id}>
-                    {v.name}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
           );
         })}
         {roles.length === 0 && (
-          <p className="py-6 text-center text-sm text-black/50 dark:text-white/50">
+          <p className="py-6 text-center text-sm text-muted">
             No roles set up yet.
           </p>
         )}
