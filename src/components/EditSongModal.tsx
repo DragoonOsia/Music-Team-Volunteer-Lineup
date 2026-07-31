@@ -1,39 +1,49 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { addSong } from "@/lib/actions";
+import { updateSong } from "@/lib/actions";
 import KeyPicker from "@/components/KeyPicker";
 import BpmStepper from "@/components/BpmStepper";
 
-export default function AddSongModal({
+type Song = {
+  id: string;
+  name: string;
+  singer_or_band: string | null;
+  version: string | null;
+  url: string | null;
+  key: string | null;
+  bpm: number | null;
+};
+
+export default function EditSongModal({
   serviceId,
-  triggerLabel = "Add Song",
-  triggerClassName = "rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-foreground hover:bg-accent-hover",
+  song,
 }: {
   serviceId: string;
-  triggerLabel?: string;
-  triggerClassName?: string;
+  song: Song;
 }) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [key, setKey] = useState<string | null>(null);
-  const [bpm, setBpm] = useState<number | null>(null);
+  const [key, setKey] = useState<string | null>(song.key);
+  const [bpm, setBpm] = useState<number | null>(song.bpm);
 
   function handleSubmit(formData: FormData) {
     if (key) formData.set("key", key);
     if (bpm !== null) formData.set("bpm", String(bpm));
     startTransition(async () => {
-      await addSong(serviceId, formData);
+      await updateSong(serviceId, song.id, formData);
       setOpen(false);
-      setKey(null);
-      setBpm(null);
     });
   }
 
   return (
     <>
-      <button onClick={() => setOpen(true)} className={triggerClassName}>
-        {triggerLabel}
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="text-sm text-muted hover:text-foreground"
+      >
+        Edit
       </button>
 
       {open && (
@@ -45,50 +55,54 @@ export default function AddSongModal({
             className="w-full max-w-sm rounded-lg border border-border bg-surface-2 p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="mb-4 text-lg font-semibold">Add Song</h2>
+            <h2 className="mb-4 text-lg font-semibold">Edit Song</h2>
             <form action={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="s-name" className="mb-1 block text-sm font-medium">
+                <label htmlFor={`es-name-${song.id}`} className="mb-1 block text-sm font-medium">
                   Name
                 </label>
                 <input
-                  id="s-name"
+                  id={`es-name-${song.id}`}
                   name="name"
                   type="text"
+                  defaultValue={song.name}
                   required
                   className="w-full rounded-md border border-border-strong bg-transparent px-3 py-2 text-sm"
                 />
               </div>
               <div>
-                <label htmlFor="s-singer" className="mb-1 block text-sm font-medium">
+                <label htmlFor={`es-singer-${song.id}`} className="mb-1 block text-sm font-medium">
                   Singer / Band
                 </label>
                 <input
-                  id="s-singer"
+                  id={`es-singer-${song.id}`}
                   name="singer_or_band"
                   type="text"
+                  defaultValue={song.singer_or_band ?? ""}
                   className="w-full rounded-md border border-border-strong bg-transparent px-3 py-2 text-sm"
                 />
               </div>
               <div>
-                <label htmlFor="s-version" className="mb-1 block text-sm font-medium">
+                <label htmlFor={`es-version-${song.id}`} className="mb-1 block text-sm font-medium">
                   Version <span className="text-muted">(if available)</span>
                 </label>
                 <input
-                  id="s-version"
+                  id={`es-version-${song.id}`}
                   name="version"
                   type="text"
+                  defaultValue={song.version ?? ""}
                   className="w-full rounded-md border border-border-strong bg-transparent px-3 py-2 text-sm"
                 />
               </div>
               <div>
-                <label htmlFor="s-url" className="mb-1 block text-sm font-medium">
+                <label htmlFor={`es-url-${song.id}`} className="mb-1 block text-sm font-medium">
                   URL Reference
                 </label>
                 <input
-                  id="s-url"
+                  id={`es-url-${song.id}`}
                   name="url"
                   type="url"
+                  defaultValue={song.url ?? ""}
                   placeholder="https://..."
                   className="w-full rounded-md border border-border-strong bg-transparent px-3 py-2 text-sm"
                 />

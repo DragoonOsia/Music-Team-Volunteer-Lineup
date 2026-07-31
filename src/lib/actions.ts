@@ -174,6 +174,30 @@ export async function deleteSong(serviceId: string, songId: string) {
   revalidatePath(`/services/${serviceId}`);
 }
 
+export async function updateSong(serviceId: string, songId: string, formData: FormData) {
+  const name = String(formData.get("name") ?? "").trim();
+  const singerOrBand = String(formData.get("singer_or_band") ?? "").trim();
+  const version = String(formData.get("version") ?? "").trim();
+  const url = String(formData.get("url") ?? "").trim();
+  const key = String(formData.get("key") ?? "").trim();
+  const bpmRaw = String(formData.get("bpm") ?? "").trim();
+  const bpm = bpmRaw ? Number(bpmRaw) : null;
+
+  const supabase = await createClient();
+  await supabase
+    .from("songs")
+    .update({
+      name,
+      singer_or_band: singerOrBand || null,
+      version: version || null,
+      url: url || null,
+      key: key || null,
+      bpm: bpm !== null && !Number.isNaN(bpm) ? bpm : null,
+    })
+    .eq("id", songId);
+  revalidatePath(`/services/${serviceId}`);
+}
+
 export async function updateSongKey(serviceId: string, songId: string, key: string) {
   const supabase = await createClient();
   await supabase.from("songs").update({ key }).eq("id", songId);

@@ -5,7 +5,7 @@
   "3": "Core Runtime Dependencies",
   "4": "TypeScript File Globs",
   "5": "NPM Scripts",
-  "6": "Root Layout & Fonts",
+  "6": "layout.tsx",
   "7": "server.ts",
   "8": "Home / Services List Page",
   "9": "ESLint Flat Config",
@@ -19,5 +19,5 @@
   "17": "Boilerplate Icon Asset (window.svg)",
   "18": "Project Description (README)",
   "19": "ServiceLineupTabs.tsx",
-  "20": "app/page.tsx"
+  "20": "AddSongModal.tsx"
 }

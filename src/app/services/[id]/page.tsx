@@ -6,6 +6,7 @@ import AddPlaylistModal from "@/components/AddPlaylistModal";
 import ServiceActionsMenu from "@/components/ServiceActionsMenu";
 import ServiceLineupTabs from "@/components/ServiceLineupTabs";
 import SongKeyModal from "@/components/SongKeyModal";
+import EditSongModal from "@/components/EditSongModal";
 
 function formatDate(dateStr: string) {
   return new Date(`${dateStr}T00:00:00`).toLocaleDateString(undefined, {
@@ -99,21 +100,29 @@ export default async function ServiceDetailPage({
                   )}
                 </div>
               </div>
-              <form action={deleteSong.bind(null, service.id, song.id)}>
-                <button
-                  type="submit"
-                  className="text-sm text-muted hover:text-danger"
-                >
-                  Remove
-                </button>
-              </form>
+              <div className="flex items-center gap-3">
+                <EditSongModal serviceId={service.id} song={song} />
+                <form action={deleteSong.bind(null, service.id, song.id)}>
+                  <button
+                    type="submit"
+                    className="text-sm text-muted hover:text-danger"
+                  >
+                    Remove
+                  </button>
+                </form>
+              </div>
             </li>
           ))}
-          {(!songs || songs.length === 0) && (
-            <li className="py-6 text-center text-sm text-muted">
-              No songs added yet.
+          {Array.from({ length: Math.max(0, 3 - (songs?.length ?? 0)) }, (_, i) => (
+            <li key={`empty-${i}`} className="flex items-center justify-between gap-3 py-3">
+              <span className="text-sm text-muted italic">Empty slot</span>
+              <AddSongModal
+                serviceId={service.id}
+                triggerLabel="Edit"
+                triggerClassName="text-sm text-muted hover:text-foreground"
+              />
             </li>
-          )}
+          ))}
         </ul>
       </div>
 
