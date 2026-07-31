@@ -40,7 +40,7 @@ export default function VolunteerCombobox({
   }
 
   return (
-    <div className="relative min-w-[180px]">
+    <div className="relative w-full sm:w-auto sm:min-w-[180px]">
       <input
         type="text"
         disabled={disabled}

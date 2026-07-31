@@ -2,9 +2,8 @@
   "0": "TypeScript Compiler Options",
   "1": "actions.ts",
   "2": "Dev Tooling Dependencies",
-  "3": "dependencies",
+  "3": "package.json",
   "4": "TypeScript File Globs",
-  "5": "package.json",
   "6": "layout.tsx",
   "7": "server.ts",
   "8": "Home / Services List Page",
@@ -19,5 +18,5 @@
   "17": "Boilerplate Icon Asset (window.svg)",
   "18": "Project Description (README)",
   "19": "ServiceLineupTabs.tsx",
-  "20": "EditSongModal.tsx"
+  "20": "AddSongModal.tsx"
 }

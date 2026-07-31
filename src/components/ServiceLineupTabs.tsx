@@ -71,7 +71,7 @@ export default function ServiceLineupTabs({
           const currentPersonId = assignmentByRole.get(role.id) ?? null;
 
           return (
-            <div key={role.id} className="flex items-center justify-between gap-4 py-2">
+            <div key={role.id} className="flex flex-col gap-1.5 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
               <span className="text-sm font-medium">{role.name}</span>
               <VolunteerCombobox
                 key={`${activeTeamId}_${role.id}`}
