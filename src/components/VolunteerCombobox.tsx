@@ -2,7 +2,11 @@
 
 import { useMemo, useState } from "react";
 
-type Volunteer = { id: string; name: string };
+type Volunteer = { id: string; name: string; nickname: string | null };
+
+function displayName(v: Volunteer) {
+  return v.nickname || v.name;
+}
 
 export default function VolunteerCombobox({
   value,
@@ -18,12 +22,15 @@ export default function VolunteerCombobox({
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
 
-  const selectedName = volunteers.find((v) => v.id === value)?.name ?? "";
+  const selected = volunteers.find((v) => v.id === value);
+  const selectedName = selected ? displayName(selected) : "";
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return volunteers;
-    return volunteers.filter((v) => v.name.toLowerCase().includes(q));
+    return volunteers.filter(
+      (v) => v.name.toLowerCase().includes(q) || (v.nickname ?? "").toLowerCase().includes(q)
+    );
   }, [query, volunteers]);
 
   function pick(personId: string) {
@@ -73,7 +80,7 @@ export default function VolunteerCombobox({
               }}
               className="block w-full px-3 py-1.5 text-left text-sm hover:bg-surface"
             >
-              {v.name}
+              {displayName(v)}
             </button>
           ))}
           {filtered.length === 0 && (

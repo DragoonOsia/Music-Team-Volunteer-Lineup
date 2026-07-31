@@ -41,7 +41,7 @@ export default function EditSongModal({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="text-sm text-muted hover:text-foreground"
+        className="rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium hover:bg-surface"
       >
         Edit
       </button>

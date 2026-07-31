@@ -538,8 +538,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_page",
-      "community": 7,
-      "community_name": "server.ts",
+      "community": 1,
+      "community_name": "actions.ts",
       "norm_label": "app/page.tsx"
     },
     {
@@ -549,8 +549,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_page_formatdate",
-      "community": 7,
-      "community_name": "server.ts",
+      "community": 1,
+      "community_name": "actions.ts",
       "norm_label": "formatdate()"
     },
     {
@@ -560,8 +560,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_app_page_home",
-      "community": 7,
-      "community_name": "server.ts",
+      "community": 1,
+      "community_name": "actions.ts",
       "norm_label": "home()"
     },
     {
@@ -961,10 +961,21 @@
       "norm_label": "volunteer"
     },
     {
-      "label": "VolunteerCombobox()",
+      "label": "displayName()",
       "file_type": "code",
       "source_file": "src/components/VolunteerCombobox.tsx",
       "source_location": "L7",
+      "_origin": "ast",
+      "id": "src_components_volunteercombobox_displayname",
+      "community": 19,
+      "community_name": "ServiceLineupTabs.tsx",
+      "norm_label": "displayname()"
+    },
+    {
+      "label": "VolunteerCombobox()",
+      "file_type": "code",
+      "source_file": "src/components/VolunteerCombobox.tsx",
+      "source_location": "L11",
       "_origin": "ast",
       "id": "src_components_volunteercombobox_volunteercombobox",
       "community": 19,
@@ -1011,8 +1022,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "src_lib_actions_ensureupcomingsundays",
-      "community": 7,
-      "community_name": "server.ts",
+      "community": 1,
+      "community_name": "actions.ts",
       "norm_label": "ensureupcomingsundays()"
     },
     {
@@ -3127,6 +3138,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/VolunteerCombobox.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_volunteercombobox",
+      "target": "src_components_volunteercombobox_displayname",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/VolunteerCombobox.tsx",
       "source_location": "L5",
       "weight": 1.0,
       "_origin": "ast",
@@ -3138,11 +3160,23 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/VolunteerCombobox.tsx",
-      "source_location": "L7",
+      "source_location": "L11",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_volunteercombobox",
       "target": "src_components_volunteercombobox_volunteercombobox",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/VolunteerCombobox.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_volunteercombobox_volunteercombobox",
+      "target": "src_components_volunteercombobox_displayname",
       "confidence_score": 1.0
     },
     {
@@ -3960,5 +3994,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "8135b799e17490a6a3bb7046dadd76f725454a35"
+  "built_at_commit": "a6ba63180f31dfb2a45af64d8acfa1c537466eb5"
 }

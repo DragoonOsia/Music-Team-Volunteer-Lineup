@@ -6,7 +6,7 @@ import VolunteerCombobox from "@/components/VolunteerCombobox";
 
 type Team = { id: string; name: string };
 type Role = { id: string; name: string; instrument: string | null };
-type Volunteer = { id: string; name: string; instruments: string[] };
+type Volunteer = { id: string; name: string; nickname: string | null; instruments: string[] };
 type Assignment = { team_id: string; role_id: string; person_id: string | null };
 
 export default function ServiceLineupTabs({

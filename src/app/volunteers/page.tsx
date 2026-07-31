@@ -47,7 +47,7 @@ export default async function VolunteersPage() {
             <form action={deleteVolunteer.bind(null, v.id)}>
               <button
                 type="submit"
-                className="text-sm text-muted hover:text-danger"
+                className="rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium text-danger hover:border-danger hover:bg-surface"
               >
                 Remove
               </button>

@@ -41,7 +41,7 @@ export default async function ServiceDetailPage({
       supabase.from("playlists").select("id, url").eq("service_id", id).order("created_at"),
       supabase.from("teams").select("id, name").order("sort_order"),
       supabase.from("roles").select("id, name, instrument").order("sort_order"),
-      supabase.from("volunteers").select("id, name, instruments").order("name"),
+      supabase.from("volunteers").select("id, name, nickname, instruments").order("name"),
       supabase.from("service_lineup_assignments").select("team_id, role_id, person_id").eq("service_id", id),
     ]);
 
@@ -57,7 +57,7 @@ export default async function ServiceDetailPage({
         <form action={deleteService.bind(null, service.id)}>
           <button
             type="submit"
-            className="text-sm text-muted hover:text-danger"
+            className="rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium text-danger hover:border-danger hover:bg-surface"
           >
             Delete service
           </button>
@@ -105,7 +105,7 @@ export default async function ServiceDetailPage({
                 <form action={deleteSong.bind(null, service.id, song.id)}>
                   <button
                     type="submit"
-                    className="text-sm text-muted hover:text-danger"
+                    className="rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium text-danger hover:border-danger hover:bg-surface"
                   >
                     Remove
                   </button>
@@ -119,7 +119,7 @@ export default async function ServiceDetailPage({
               <AddSongModal
                 serviceId={service.id}
                 triggerLabel="Edit"
-                triggerClassName="text-sm text-muted hover:text-foreground"
+                triggerClassName="rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium hover:bg-surface"
               />
             </li>
           ))}
@@ -143,7 +143,7 @@ export default async function ServiceDetailPage({
                 <form action={deletePlaylist.bind(null, service.id, playlist.id)}>
                   <button
                     type="submit"
-                    className="text-sm text-muted hover:text-danger"
+                    className="rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium text-danger hover:border-danger hover:bg-surface"
                   >
                     Remove
                   </button>
