@@ -1,0 +1,60 @@
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+
+function formatDate(dateStr: string) {
+  return new Date(`${dateStr}T00:00:00`).toLocaleDateString(undefined, {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+export default async function Home() {
+  const supabase = await createClient();
+  const { data: services } = await supabase
+    .from("services")
+    .select("id, service_date, title")
+    .order("service_date", { ascending: false });
+
+  return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-semibold">Services</h1>
+          <p className="text-sm text-black/60 dark:text-white/60">
+            Pick a date to build the lineup.
+          </p>
+        </div>
+        <Link
+          href="/services/new"
+          className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background"
+        >
+          New Service
+        </Link>
+      </div>
+
+      <ul className="divide-y divide-black/10 dark:divide-white/10">
+        {(services ?? []).map((service) => (
+          <li key={service.id}>
+            <Link
+              href={`/services/${service.id}`}
+              className="flex items-center justify-between py-3 hover:opacity-70"
+            >
+              <span>
+                {formatDate(service.service_date)}
+                {service.title ? ` — ${service.title}` : ""}
+              </span>
+              <span aria-hidden>→</span>
+            </Link>
+          </li>
+        ))}
+        {(!services || services.length === 0) && (
+          <li className="py-6 text-center text-sm text-black/50 dark:text-white/50">
+            No services yet. Create one to start building a lineup.
+          </li>
+        )}
+      </ul>
+    </div>
+  );
+}
