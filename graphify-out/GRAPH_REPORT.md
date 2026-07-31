@@ -1,16 +1,16 @@
 # Graph Report - Music-Team-Volunteer-Lineup  (2026-07-31)
 
 ## Corpus Check
-- 33 files · ~7,003 words
+- 35 files · ~7,621 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 156 nodes · 214 edges · 20 communities (9 shown, 11 thin omitted)
+- 167 nodes · 236 edges · 21 communities (10 shown, 11 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e0ed87b1`
+- Built from commit: `26f65880`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -20,6 +20,7 @@
 - Dev Tooling Dependencies
 - package.json
 - TypeScript File Globs
+- app/page.tsx
 - layout.tsx
 - server.ts
 - Home / Services List Page
@@ -37,33 +38,33 @@
 - EditSongModal.tsx
 
 ## God Nodes (most connected - your core abstractions)
-1. `createClient()` - 25 edges
+1. `createClient()` - 27 edges
 2. `compilerOptions` - 16 edges
-3. `include` - 7 edges
-4. `scripts` - 5 edges
-5. `ensureUpcomingSundays()` - 5 edges
-6. `Home()` - 4 edges
-7. `ServiceDetailPage()` - 4 edges
-8. `ensureServiceLineupSlots()` - 4 edges
-9. `updateServiceLineupAssignment()` - 4 edges
-10. `unarchiveService()` - 4 edges
+3. `ensureUpcomingSundays()` - 7 edges
+4. `include` - 7 edges
+5. `Home()` - 6 edges
+6. `ensureServiceLineupSlots()` - 6 edges
+7. `scripts` - 5 edges
+8. `ServiceDetailPage()` - 4 edges
+9. `ServicesPage()` - 4 edges
+10. `updateServiceLineupAssignment()` - 4 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `Home()` --calls--> `ensureUpcomingSundays()`  [EXTRACTED]
+  src/app/page.tsx → src/lib/actions.ts
 - `Home()` --calls--> `createClient()`  [EXTRACTED]
   src/app/page.tsx → src/lib/supabase/server.ts
+- `ServiceDetailPage()` --calls--> `ensureServiceLineupSlots()`  [EXTRACTED]
+  src/app/services/[id]/page.tsx → src/lib/actions.ts
+- `ServicesPage()` --calls--> `createClient()`  [EXTRACTED]
+  src/app/services/page.tsx → src/lib/supabase/server.ts
 - `VolunteersPage()` --calls--> `createClient()`  [EXTRACTED]
   src/app/volunteers/page.tsx → src/lib/supabase/server.ts
-- `ensureUpcomingSundays()` --calls--> `createClient()`  [EXTRACTED]
-  src/lib/actions.ts → src/lib/supabase/server.ts
-- `updateServiceLineupAssignment()` --calls--> `createClient()`  [EXTRACTED]
-  src/lib/actions.ts → src/lib/supabase/server.ts
-- `ArchivePage()` --calls--> `createClient()`  [EXTRACTED]
-  src/app/archive/page.tsx → src/lib/supabase/server.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (20 total, 11 thin omitted)
+## Communities (21 total, 11 thin omitted)
 
 ### Community 0 - "TypeScript Compiler Options"
 Cohesion: 0.11
@@ -71,7 +72,7 @@ Nodes (19): dom, dom.iterable, esnext, compilerOptions, allowJs, esModuleInterop
 
 ### Community 1 - "actions.ts"
 Cohesion: 0.13
-Nodes (23): ArchivePage(), formatDate(), formatDate(), ServiceDetailPage(), VolunteersPage(), INSTRUMENTS, ServiceActionsMenu(), addPlaylist() (+15 more)
+Nodes (22): ArchivePage(), formatDate(), formatDate(), ServiceDetailPage(), VolunteersPage(), INSTRUMENTS, ServiceActionsMenu(), addPlaylist() (+14 more)
 
 ### Community 2 - "Dev Tooling Dependencies"
 Cohesion: 0.12
@@ -85,13 +86,17 @@ Nodes (19): next, dependencies, next, react, react-dom, @supabase/ssr, @supabase
 Cohesion: 0.20
 Nodes (9): **/*.mts, .next/dev/types/**/*.ts, next-env.d.ts, .next/types/**/*.ts, node_modules, **/*.ts, **/*.tsx, exclude (+1 more)
 
+### Community 5 - "app/page.tsx"
+Cohesion: 0.24
+Nodes (10): formatDate(), Home(), todayKey(), Assignment, displayName(), ReadOnlyLineupTabs(), Role, Team (+2 more)
+
 ### Community 6 - "layout.tsx"
 Cohesion: 0.33
 Nodes (4): geistMono, geistSans, metadata, GuitarLogo()
 
 ### Community 7 - "server.ts"
 Cohesion: 0.25
-Nodes (6): formatDate(), Home(), ensureUpcomingSundays(), nextSundays(), toDateKey(), Database
+Nodes (6): formatDate(), ServicesPage(), ensureUpcomingSundays(), nextSundays(), toDateKey(), Database
 
 ### Community 19 - "ServiceLineupTabs.tsx"
 Cohesion: 0.22
@@ -102,24 +107,24 @@ Cohesion: 0.26
 Nodes (4): Song, KeyPicker(), KEYS, TimeSignatureInput()
 
 ## Knowledge Gaps
-- **66 isolated node(s):** `eslintConfig`, `nextConfig`, `name`, `version`, `private` (+61 more)
+- **70 isolated node(s):** `eslintConfig`, `nextConfig`, `name`, `version`, `private` (+65 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `devDependencies` connect `Dev Tooling Dependencies` to `package.json`?**
+- **Why does `createClient()` connect `actions.ts` to `ServiceLineupTabs.tsx`, `app/page.tsx`, `server.ts`?**
   _High betweenness centrality (0.036) - this node is a cross-community bridge._
+- **Why does `devDependencies` connect `Dev Tooling Dependencies` to `package.json`?**
+  _High betweenness centrality (0.032) - this node is a cross-community bridge._
 - **Why does `compilerOptions` connect `TypeScript Compiler Options` to `TypeScript File Globs`?**
-  _High betweenness centrality (0.027) - this node is a cross-community bridge._
-- **Why does `createClient()` connect `actions.ts` to `ServiceLineupTabs.tsx`, `server.ts`?**
-  _High betweenness centrality (0.027) - this node is a cross-community bridge._
+  _High betweenness centrality (0.024) - this node is a cross-community bridge._
 - **What connects `eslintConfig`, `nextConfig`, `name` to the rest of the system?**
-  _66 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _70 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `TypeScript Compiler Options` be split into smaller, more focused modules?**
   _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
 - **Should `actions.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.13012477718360071 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.13068181818181818 - nodes in this community are weakly interconnected._
 - **Should `Dev Tooling Dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._

@@ -1,16 +1,16 @@
 # Graph Report - Music-Team-Volunteer-Lineup  (2026-07-31)
 
 ## Corpus Check
-- 32 files · ~6,559 words
+- 33 files · ~7,003 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 151 nodes · 199 edges · 20 communities (9 shown, 11 thin omitted)
+- 156 nodes · 193 edges · 20 communities (9 shown, 11 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e0ed87b1`
+- Built from commit: `26f65880`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -37,28 +37,26 @@
 - EditSongModal.tsx
 
 ## God Nodes (most connected - your core abstractions)
-1. `createClient()` - 22 edges
-2. `compilerOptions` - 16 edges
+1. `compilerOptions` - 16 edges
+2. `createClient()` - 7 edges
 3. `include` - 7 edges
 4. `scripts` - 5 edges
-5. `ensureUpcomingSundays()` - 5 edges
-6. `Home()` - 4 edges
-7. `ServiceDetailPage()` - 4 edges
-8. `KeyPicker()` - 4 edges
-9. `ensureServiceLineupSlots()` - 4 edges
-10. `lib` - 4 edges
+5. `ensureUpcomingSundays()` - 4 edges
+6. `lib` - 4 edges
+7. `Home()` - 3 edges
+8. `ServiceDetailPage()` - 3 edges
+9. `TimeSignatureInput()` - 3 edges
+10. `nextSundays()` - 3 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Home()` --calls--> `createClient()`  [EXTRACTED]
-  src/app/page.tsx → src/lib/supabase/server.ts
 - `VolunteersPage()` --calls--> `createClient()`  [EXTRACTED]
   src/app/volunteers/page.tsx → src/lib/supabase/server.ts
-- `ensureUpcomingSundays()` --calls--> `createClient()`  [EXTRACTED]
-  src/lib/actions.ts → src/lib/supabase/server.ts
-- `updateServiceLineupAssignment()` --calls--> `createClient()`  [EXTRACTED]
-  src/lib/actions.ts → src/lib/supabase/server.ts
-- `addSong()` --calls--> `createClient()`  [EXTRACTED]
-  src/lib/actions.ts → src/lib/supabase/server.ts
+- `Home()` --calls--> `ensureUpcomingSundays()`  [EXTRACTED]
+  src/app/page.tsx → src/lib/actions.ts
+- `ServiceDetailPage()` --calls--> `ensureServiceLineupSlots()`  [EXTRACTED]
+  src/app/services/[id]/page.tsx → src/lib/actions.ts
+- `ServiceLineupTabs()` --calls--> `updateServiceLineupAssignment()`  [EXTRACTED]
+  src/components/ServiceLineupTabs.tsx → src/lib/actions.ts
 
 ## Import Cycles
 - None detected.
@@ -70,8 +68,8 @@ Cohesion: 0.11
 Nodes (19): dom, dom.iterable, esnext, compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules (+11 more)
 
 ### Community 1 - "actions.ts"
-Cohesion: 0.15
-Nodes (18): formatDate(), ServiceDetailPage(), VolunteersPage(), INSTRUMENTS, ServiceActionsMenu(), addPlaylist(), addService(), addVolunteer() (+10 more)
+Cohesion: 0.13
+Nodes (16): formatDate(), ServiceDetailPage(), INSTRUMENTS, ServiceActionsMenu(), addPlaylist(), addService(), addVolunteer(), archiveService() (+8 more)
 
 ### Community 2 - "Dev Tooling Dependencies"
 Cohesion: 0.12
@@ -86,23 +84,23 @@ Cohesion: 0.20
 Nodes (9): **/*.mts, .next/dev/types/**/*.ts, next-env.d.ts, .next/types/**/*.ts, node_modules, **/*.ts, **/*.tsx, exclude (+1 more)
 
 ### Community 6 - "layout.tsx"
-Cohesion: 0.33
-Nodes (4): geistMono, geistSans, metadata, GuitarLogo()
+Cohesion: 0.29
+Nodes (3): geistMono, geistSans, metadata
 
 ### Community 7 - "server.ts"
-Cohesion: 0.33
-Nodes (4): formatDate(), Home(), ensureUpcomingSundays(), Database
+Cohesion: 0.18
+Nodes (10): ArchivePage(), formatDate(), formatDate(), Home(), VolunteersPage(), deleteVolunteer(), ensureUpcomingSundays(), unarchiveService() (+2 more)
 
 ### Community 19 - "ServiceLineupTabs.tsx"
-Cohesion: 0.20
+Cohesion: 0.22
 Nodes (9): Assignment, Role, ServiceLineupTabs(), Team, Volunteer, displayName(), Volunteer, VolunteerCombobox() (+1 more)
 
 ### Community 20 - "EditSongModal.tsx"
-Cohesion: 0.17
-Nodes (6): Song, KeyPicker(), KEYS, addSong(), updateSong(), updateSongKey()
+Cohesion: 0.18
+Nodes (6): Song, KEYS, TimeSignatureInput(), addSong(), parseTimeSignature(), updateSong()
 
 ## Knowledge Gaps
-- **66 isolated node(s):** `Team`, `Role`, `Volunteer`, `Assignment`, `Volunteer` (+61 more)
+- **65 isolated node(s):** `geistSans`, `geistMono`, `metadata`, `Song`, `eslintConfig` (+60 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -110,15 +108,15 @@ Nodes (6): Song, KeyPicker(), KEYS, addSong(), updateSong(), updateSongKey()
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `devDependencies` connect `Dev Tooling Dependencies` to `package.json`?**
-  _High betweenness centrality (0.039) - this node is a cross-community bridge._
+  _High betweenness centrality (0.036) - this node is a cross-community bridge._
 - **Why does `compilerOptions` connect `TypeScript Compiler Options` to `TypeScript File Globs`?**
-  _High betweenness centrality (0.029) - this node is a cross-community bridge._
-- **What connects `Team`, `Role`, `Volunteer` to the rest of the system?**
-  _66 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _High betweenness centrality (0.027) - this node is a cross-community bridge._
+- **What connects `geistSans`, `geistMono`, `metadata` to the rest of the system?**
+  _65 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `TypeScript Compiler Options` be split into smaller, more focused modules?**
   _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
 - **Should `actions.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.14814814814814814 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
 - **Should `Dev Tooling Dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
 - **Should `package.json` be split into smaller, more focused modules?**

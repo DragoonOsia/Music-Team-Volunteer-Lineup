@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { ensureUpcomingSundays } from "@/lib/actions";
+import { ensureUpcomingSundays, ensureServiceLineupSlots } from "@/lib/actions";
+import ReadOnlyLineupTabs from "@/components/ReadOnlyLineupTabs";
 
 function formatDate(dateStr: string) {
   return new Date(`${dateStr}T00:00:00`).toLocaleDateString(undefined, {
@@ -11,54 +12,74 @@ function formatDate(dateStr: string) {
   });
 }
 
+function todayKey() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export default async function Home() {
   await ensureUpcomingSundays(3);
 
   const supabase = await createClient();
-  const { data: services } = await supabase
+  const { data: service } = await supabase
     .from("services")
     .select("id, service_date, title")
     .eq("archived", false)
-    .order("service_date", { ascending: true });
+    .gte("service_date", todayKey())
+    .order("service_date", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (!service) {
+    return (
+      <div className="space-y-4">
+        <h1 className="text-xl font-semibold">No upcoming service</h1>
+        <p className="text-sm text-muted">
+          Nothing scheduled yet.{" "}
+          <Link href="/services" className="underline">
+            Go to Services
+          </Link>{" "}
+          to add one.
+        </p>
+      </div>
+    );
+  }
+
+  await ensureServiceLineupSlots(service.id);
+
+  const [{ data: teams }, { data: roles }, { data: volunteers }, { data: assignments }] =
+    await Promise.all([
+      supabase.from("teams").select("id, name").order("sort_order"),
+      supabase.from("roles").select("id, name").order("sort_order"),
+      supabase.from("volunteers").select("id, name, nickname").order("name"),
+      supabase.from("service_lineup_assignments").select("team_id, role_id, person_id").eq("service_id", service.id),
+    ]);
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6">
+      <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-xl font-semibold">Services</h1>
-          <p className="text-sm text-muted">
-            Pick a service to see its setlist and lineup.
-          </p>
+          <p className="text-sm text-muted">Upcoming Sunday</p>
+          <h1 className="text-xl font-semibold">{formatDate(service.service_date)}</h1>
+          {service.title && <p className="text-sm text-muted">{service.title}</p>}
         </div>
         <Link
-          href="/services/new"
-          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-foreground hover:bg-accent-hover"
+          href={`/services/${service.id}`}
+          className="rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium hover:bg-surface"
         >
-          New Service
+          Edit service →
         </Link>
       </div>
 
-      <ul className="divide-y divide-border">
-        {(services ?? []).map((service) => (
-          <li key={service.id}>
-            <Link
-              href={`/services/${service.id}`}
-              className="flex items-center justify-between py-3 hover:opacity-70"
-            >
-              <span>
-                {formatDate(service.service_date)}
-                {service.title ? ` — ${service.title}` : ""}
-              </span>
-              <span aria-hidden>→</span>
-            </Link>
-          </li>
-        ))}
-        {(!services || services.length === 0) && (
-          <li className="py-6 text-center text-sm text-muted">
-            No services yet. Create one to start building a lineup.
-          </li>
-        )}
-      </ul>
+      <ReadOnlyLineupTabs
+        teams={teams ?? []}
+        roles={roles ?? []}
+        volunteers={volunteers ?? []}
+        assignments={assignments ?? []}
+      />
     </div>
   );
 }

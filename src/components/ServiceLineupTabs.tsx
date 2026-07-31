@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { updateServiceLineupAssignment } from "@/lib/actions";
 import VolunteerCombobox from "@/components/VolunteerCombobox";
 
@@ -23,7 +23,6 @@ export default function ServiceLineupTabs({
   assignments: Assignment[];
 }) {
   const [activeTeamId, setActiveTeamId] = useState(teams[0]?.id ?? "");
-  const [isPending, startTransition] = useTransition();
 
   const assignmentByRole = new Map(
     assignments
@@ -31,13 +30,16 @@ export default function ServiceLineupTabs({
       .map((a) => [a.role_id, a.person_id])
   );
 
-  // Error catcher: once someone is booked into a non-Vocals role, hide them
-  // from every other non-Vocals role in this team so they can't accidentally
-  // be double-booked on two instruments at once. Vocals roles are exempt.
-  const bookedElsewhereNonVocals = (roleId: string) =>
+  // Error catcher: once someone is booked into a real instrument role, hide
+  // them from every other instrument role in this team so they can't
+  // accidentally be double-booked on two instruments at once. Vocals and
+  // Musical Director are exempt - picking either never blocks (or gets
+  // blocked by) picking one instrument.
+  const EXEMPT_INSTRUMENTS = new Set(["Vocals", "Musical Director"]);
+  const bookedElsewhereNonExempt = (roleId: string) =>
     new Set(
       roles
-        .filter((r) => r.instrument !== "Vocals" && r.id !== roleId)
+        .filter((r) => !EXEMPT_INSTRUMENTS.has(r.instrument ?? "") && r.id !== roleId)
         .map((r) => assignmentByRole.get(r.id))
         .filter((id): id is string => Boolean(id))
     );
@@ -62,7 +64,12 @@ export default function ServiceLineupTabs({
 
       <div className="divide-y divide-border rounded-lg border border-border px-4">
         {roles.map((role) => {
-          const excluded = bookedElsewhereNonVocals(role.id);
+          // Exempt roles (Vocals, Musical Director) show everyone who has the
+          // skill, full stop - an instrument booking elsewhere never hides
+          // them here. Only non-exempt (real instrument) roles exclude people
+          // already booked on another instrument.
+          const isExemptRole = EXEMPT_INSTRUMENTS.has(role.instrument ?? "");
+          const excluded = isExemptRole ? new Set<string>() : bookedElsewhereNonExempt(role.id);
           const eligible = volunteers.filter(
             (v) =>
               (role.instrument ? v.instruments.includes(role.instrument) : true) &&
@@ -77,12 +84,9 @@ export default function ServiceLineupTabs({
                 key={`${activeTeamId}_${role.id}`}
                 value={currentPersonId}
                 volunteers={eligible}
-                disabled={isPending}
-                onChange={(personId) => {
-                  startTransition(() => {
-                    updateServiceLineupAssignment(serviceId, activeTeamId, role.id, personId);
-                  });
-                }}
+                onChange={(personId) =>
+                  updateServiceLineupAssignment(serviceId, activeTeamId, role.id, personId)
+                }
               />
             </div>
           );

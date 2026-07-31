@@ -10,6 +10,7 @@ const INSTRUMENTS = [
   "Bass Guitar",
   "Keyboard",
   "Vocals",
+  "Musical Director",
 ];
 
 export default function AddVolunteerModal() {

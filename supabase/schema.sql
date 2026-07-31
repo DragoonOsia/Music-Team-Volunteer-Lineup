@@ -104,6 +104,7 @@ on conflict (name) do nothing;
 
 -- Starter roles - safe to edit/add more later from the SQL editor
 insert into roles (name, instrument, sort_order) values
+  ('Musical Director', 'Musical Director', 0),
   ('Vocals 1', 'Vocals', 1),
   ('Vocals 2', 'Vocals', 2),
   ('Vocals 3', 'Vocals', 3),

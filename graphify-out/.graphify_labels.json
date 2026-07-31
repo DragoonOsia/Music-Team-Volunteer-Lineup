@@ -4,6 +4,7 @@
   "2": "Dev Tooling Dependencies",
   "3": "package.json",
   "4": "TypeScript File Globs",
+  "5": "app/page.tsx",
   "6": "layout.tsx",
   "7": "server.ts",
   "8": "Home / Services List Page",

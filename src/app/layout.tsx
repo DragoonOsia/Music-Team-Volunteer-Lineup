@@ -36,7 +36,7 @@ export default function RootLayout({
               <GuitarLogo />
               Worship Team Lineup
             </Link>
-            <Link href="/" className="text-muted hover:text-foreground">
+            <Link href="/services" className="text-muted hover:text-foreground">
               Services
             </Link>
             <Link href="/volunteers" className="text-muted hover:text-foreground">

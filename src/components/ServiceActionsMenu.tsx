@@ -35,7 +35,7 @@ export default function ServiceActionsMenu({
         await unarchiveService(serviceId);
       } else {
         await archiveService(serviceId);
-        router.push("/");
+        router.push("/services");
       }
     });
   }

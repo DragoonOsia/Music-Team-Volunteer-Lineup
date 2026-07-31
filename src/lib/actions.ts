@@ -78,6 +78,7 @@ const INSTRUMENTS = [
   "Bass Guitar",
   "Keyboard",
   "Vocals",
+  "Musical Director",
 ];
 
 export async function addVolunteer(formData: FormData) {
@@ -118,6 +119,7 @@ export async function updateServiceLineupAssignment(
     .eq("team_id", teamId)
     .eq("role_id", roleId);
   revalidatePath(`/services/${serviceId}`);
+  revalidatePath("/");
 }
 
 export async function addService(formData: FormData) {
@@ -135,6 +137,7 @@ export async function addService(formData: FormData) {
   if (error || !service) return;
 
   revalidatePath("/");
+  revalidatePath("/services");
   redirect(`/services/${service.id}`);
 }
 
@@ -142,13 +145,15 @@ export async function deleteService(id: string) {
   const supabase = await createClient();
   await supabase.from("services").delete().eq("id", id);
   revalidatePath("/");
-  redirect("/");
+  revalidatePath("/services");
+  redirect("/services");
 }
 
 export async function archiveService(id: string) {
   const supabase = await createClient();
   await supabase.from("services").update({ archived: true }).eq("id", id);
   revalidatePath("/");
+  revalidatePath("/services");
   revalidatePath("/archive");
   revalidatePath(`/services/${id}`);
 }
@@ -157,6 +162,7 @@ export async function unarchiveService(id: string) {
   const supabase = await createClient();
   await supabase.from("services").update({ archived: false }).eq("id", id);
   revalidatePath("/");
+  revalidatePath("/services");
   revalidatePath("/archive");
   revalidatePath(`/services/${id}`);
 }
