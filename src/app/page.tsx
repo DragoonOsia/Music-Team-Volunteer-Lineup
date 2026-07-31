@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { ensureUpcomingSundays } from "@/lib/actions";
 
 function formatDate(dateStr: string) {
   return new Date(`${dateStr}T00:00:00`).toLocaleDateString(undefined, {
@@ -11,6 +12,8 @@ function formatDate(dateStr: string) {
 }
 
 export default async function Home() {
+  await ensureUpcomingSundays(3);
+
   const supabase = await createClient();
   const { data: services } = await supabase
     .from("services")
@@ -23,7 +26,7 @@ export default async function Home() {
         <div>
           <h1 className="text-xl font-semibold">Services</h1>
           <p className="text-sm text-black/60 dark:text-white/60">
-            Pick a date to build the lineup.
+            Pick a service to see its setlist and lineup.
           </p>
         </div>
         <Link

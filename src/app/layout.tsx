@@ -37,8 +37,8 @@ export default function RootLayout({
             <Link href="/" className="text-black/60 hover:text-black dark:text-white/60 dark:hover:text-white">
               Services
             </Link>
-            <Link href="/people" className="text-black/60 hover:text-black dark:text-white/60 dark:hover:text-white">
-              People
+            <Link href="/volunteers" className="text-black/60 hover:text-black dark:text-white/60 dark:hover:text-white">
+              Volunteers
             </Link>
           </nav>
         </header>

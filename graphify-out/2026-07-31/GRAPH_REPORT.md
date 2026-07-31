@@ -1,11 +1,11 @@
 # Graph Report - Music-Team-Volunteer-Lineup  (2026-07-31)
 
 ## Corpus Check
-- 26 files · ~5,133 words
+- 27 files · ~5,417 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 133 nodes · 168 edges · 20 communities (9 shown, 11 thin omitted)
+- 132 nodes · 170 edges · 20 communities (9 shown, 11 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
@@ -34,31 +34,31 @@
 - Boilerplate Icon Asset (vercel.svg)
 - Boilerplate Icon Asset (window.svg)
 - Project Description (README)
-- ServiceLineupTabs.tsx
+- teams/page.tsx
 
 ## God Nodes (most connected - your core abstractions)
-1. `createClient()` - 20 edges
+1. `createClient()` - 22 edges
 2. `compilerOptions` - 16 edges
 3. `include` - 7 edges
 4. `scripts` - 5 edges
 5. `ensureUpcomingSundays()` - 5 edges
 6. `Home()` - 4 edges
-7. `ServiceDetailPage()` - 4 edges
-8. `ensureServiceLineupSlots()` - 4 edges
-9. `updateServiceLineupAssignment()` - 4 edges
-10. `lib` - 4 edges
+7. `ensureTeamRoleSlots()` - 4 edges
+8. `updateTeamAssignment()` - 4 edges
+9. `lib` - 4 edges
+10. `ServiceDetailPage()` - 3 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Home()` --calls--> `createClient()`  [EXTRACTED]
   src/app/page.tsx → src/lib/supabase/server.ts
+- `TeamsPage()` --calls--> `createClient()`  [EXTRACTED]
+  src/app/teams/page.tsx → src/lib/supabase/server.ts
 - `VolunteersPage()` --calls--> `createClient()`  [EXTRACTED]
   src/app/volunteers/page.tsx → src/lib/supabase/server.ts
 - `ensureUpcomingSundays()` --calls--> `createClient()`  [EXTRACTED]
   src/lib/actions.ts → src/lib/supabase/server.ts
-- `updateServiceLineupAssignment()` --calls--> `createClient()`  [EXTRACTED]
+- `ensureTeamRoleSlots()` --calls--> `createClient()`  [EXTRACTED]
   src/lib/actions.ts → src/lib/supabase/server.ts
-- `Home()` --calls--> `ensureUpcomingSundays()`  [EXTRACTED]
-  src/app/page.tsx → src/lib/actions.ts
 
 ## Import Cycles
 - None detected.
@@ -71,7 +71,7 @@ Nodes (19): dom, dom.iterable, esnext, compilerOptions, allowJs, esModuleInterop
 
 ### Community 1 - "actions.ts"
 Cohesion: 0.13
-Nodes (19): formatDate(), ServiceDetailPage(), VolunteersPage(), INSTRUMENTS, ServiceActionsMenu(), addPlaylist(), addService(), addSong() (+11 more)
+Nodes (18): formatDate(), ServiceDetailPage(), VolunteersPage(), INSTRUMENTS, ServiceActionsMenu(), addPlaylist(), addService(), addSong() (+10 more)
 
 ### Community 2 - "Dev Tooling Dependencies"
 Cohesion: 0.12
@@ -97,12 +97,12 @@ Nodes (3): geistMono, geistSans, metadata
 Cohesion: 0.33
 Nodes (4): formatDate(), Home(), ensureUpcomingSundays(), Database
 
-### Community 19 - "ServiceLineupTabs.tsx"
-Cohesion: 0.33
-Nodes (6): Assignment, Role, ServiceLineupTabs(), Team, Volunteer, updateServiceLineupAssignment()
+### Community 19 - "teams/page.tsx"
+Cohesion: 0.43
+Nodes (5): TeamsPage(), TeamRoleAssignmentRow(), Volunteer, ensureTeamRoleSlots(), updateTeamAssignment()
 
 ## Knowledge Gaps
-- **63 isolated node(s):** `eslintConfig`, `nextConfig`, `name`, `version`, `private` (+58 more)
+- **60 isolated node(s):** `eslintConfig`, `nextConfig`, `name`, `version`, `private` (+55 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -110,13 +110,13 @@ Nodes (6): Assignment, Role, ServiceLineupTabs(), Team, Volunteer, updateService
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `devDependencies` connect `Dev Tooling Dependencies` to `NPM Scripts`?**
-  _High betweenness centrality (0.050) - this node is a cross-community bridge._
+  _High betweenness centrality (0.051) - this node is a cross-community bridge._
 - **Why does `compilerOptions` connect `TypeScript Compiler Options` to `TypeScript File Globs`?**
   _High betweenness centrality (0.038) - this node is a cross-community bridge._
 - **Why does `dependencies` connect `Core Runtime Dependencies` to `NPM Scripts`?**
   _High betweenness centrality (0.035) - this node is a cross-community bridge._
 - **What connects `eslintConfig`, `nextConfig`, `name` to the rest of the system?**
-  _63 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _60 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `TypeScript Compiler Options` be split into smaller, more focused modules?**
   _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
 - **Should `actions.ts` be split into smaller, more focused modules?**

@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { deleteService } from "@/lib/actions";
-import RoleAssignmentRow from "@/components/RoleAssignmentRow";
+import { deleteService, deleteSong, deletePlaylist, ensureServiceLineupSlots } from "@/lib/actions";
+import AddSongModal from "@/components/AddSongModal";
+import AddPlaylistModal from "@/components/AddPlaylistModal";
+import ServiceActionsMenu from "@/components/ServiceActionsMenu";
+import ServiceLineupTabs from "@/components/ServiceLineupTabs";
 
 function formatDate(dateStr: string) {
   return new Date(`${dateStr}T00:00:00`).toLocaleDateString(undefined, {
@@ -12,30 +15,36 @@ function formatDate(dateStr: string) {
   });
 }
 
-export default async function ServiceLineupPage({
+export default async function ServiceDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const supabase = await createClient();
 
-  const [{ data: service }, { data: roles }, { data: people }, { data: assignments }] =
-    await Promise.all([
-      supabase.from("services").select("id, service_date, title").eq("id", id).single(),
-      supabase.from("roles").select("id, name").order("sort_order"),
-      supabase.from("people").select("id, name").order("name"),
-      supabase.from("lineup_assignments").select("role_id, person_id").eq("service_id", id),
-    ]);
+  const supabase = await createClient();
+  const { data: service } = await supabase
+    .from("services")
+    .select("id, service_date, title")
+    .eq("id", id)
+    .single();
 
   if (!service) notFound();
 
-  const assignmentByRole = new Map(
-    (assignments ?? []).map((a) => [a.role_id, a.person_id])
-  );
+  await ensureServiceLineupSlots(service.id);
+
+  const [{ data: songs }, { data: playlists }, { data: teams }, { data: roles }, { data: volunteers }, { data: assignments }] =
+    await Promise.all([
+      supabase.from("songs").select("id, name, singer_or_band, version, url").eq("service_id", id).order("created_at"),
+      supabase.from("playlists").select("id, url").eq("service_id", id).order("created_at"),
+      supabase.from("teams").select("id, name").order("sort_order"),
+      supabase.from("roles").select("id, name, instrument").order("sort_order"),
+      supabase.from("volunteers").select("id, name, instruments").order("name"),
+      supabase.from("service_lineup_assignments").select("team_id, role_id, person_id").eq("service_id", id),
+    ]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-xl font-semibold">{formatDate(service.service_date)}</h1>
@@ -53,22 +62,91 @@ export default async function ServiceLineupPage({
         </form>
       </div>
 
-      <div className="divide-y divide-black/10 dark:divide-white/10">
-        {(roles ?? []).map((role) => (
-          <RoleAssignmentRow
-            key={role.id}
-            serviceId={service.id}
-            roleId={role.id}
-            roleName={role.name}
-            people={people ?? []}
-            currentPersonId={assignmentByRole.get(role.id) ?? null}
-          />
-        ))}
-        {(!roles || roles.length === 0) && (
-          <p className="py-6 text-center text-sm text-black/50 dark:text-white/50">
-            No roles set up yet. Add rows to the &quot;roles&quot; table in Supabase.
-          </p>
-        )}
+      <div className="flex flex-wrap items-center gap-2">
+        <AddSongModal serviceId={service.id} />
+        <ServiceActionsMenu serviceId={service.id} />
+        <AddPlaylistModal serviceId={service.id} />
+      </div>
+
+      <div>
+        <h2 className="mb-2 text-base font-semibold">Songs</h2>
+        <ul className="divide-y divide-black/10 dark:divide-white/10">
+          {(songs ?? []).map((song) => (
+            <li key={song.id} className="flex items-center justify-between gap-3 py-3">
+              <div>
+                <div className="font-medium">{song.name}</div>
+                <div className="text-sm text-black/60 dark:text-white/60">
+                  {[song.singer_or_band, song.version].filter(Boolean).join(" — ")}
+                  {song.url && (
+                    <>
+                      {(song.singer_or_band || song.version) && " · "}
+                      <a
+                        href={song.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline"
+                      >
+                        Link
+                      </a>
+                    </>
+                  )}
+                </div>
+              </div>
+              <form action={deleteSong.bind(null, service.id, song.id)}>
+                <button
+                  type="submit"
+                  className="text-sm text-black/50 hover:text-red-600 dark:text-white/50"
+                >
+                  Remove
+                </button>
+              </form>
+            </li>
+          ))}
+          {(!songs || songs.length === 0) && (
+            <li className="py-6 text-center text-sm text-black/50 dark:text-white/50">
+              No songs added yet.
+            </li>
+          )}
+        </ul>
+      </div>
+
+      {(playlists ?? []).length > 0 && (
+        <div>
+          <h2 className="mb-2 text-base font-semibold">Playlists</h2>
+          <ul className="divide-y divide-black/10 dark:divide-white/10">
+            {(playlists ?? []).map((playlist) => (
+              <li key={playlist.id} className="flex items-center justify-between gap-3 py-2">
+                <a
+                  href={playlist.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="truncate underline"
+                >
+                  {playlist.url}
+                </a>
+                <form action={deletePlaylist.bind(null, service.id, playlist.id)}>
+                  <button
+                    type="submit"
+                    className="text-sm text-black/50 hover:text-red-600 dark:text-white/50"
+                  >
+                    Remove
+                  </button>
+                </form>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div>
+        <h2 className="mb-2 text-base font-semibold">Lineup</h2>
+        <ServiceLineupTabs
+          serviceId={service.id}
+          teams={teams ?? []}
+          roles={roles ?? []}
+          volunteers={volunteers ?? []}
+          assignments={assignments ?? []}
+        />
       </div>
     </div>
   );

@@ -4,19 +4,120 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export async function addPerson(formData: FormData) {
-  const name = String(formData.get("name") ?? "").trim();
-  if (!name) return;
-
-  const supabase = await createClient();
-  await supabase.from("people").insert({ name });
-  revalidatePath("/people");
+function toDateKey(d: Date): string {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
-export async function deletePerson(id: string) {
+function nextSundays(count: number): string[] {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const daysUntilSunday = (7 - today.getDay()) % 7;
+  const firstSunday = new Date(today);
+  firstSunday.setDate(today.getDate() + daysUntilSunday);
+
+  return Array.from({ length: count }, (_, i) => {
+    const d = new Date(firstSunday);
+    d.setDate(firstSunday.getDate() + i * 7);
+    return toDateKey(d);
+  });
+}
+
+export async function ensureUpcomingSundays(count = 3) {
   const supabase = await createClient();
-  await supabase.from("people").delete().eq("id", id);
-  revalidatePath("/people");
+  const dates = nextSundays(count);
+
+  const { data: existing } = await supabase
+    .from("services")
+    .select("service_date")
+    .in("service_date", dates);
+
+  const existingDates = new Set((existing ?? []).map((s) => s.service_date));
+  const missing = dates.filter((d) => !existingDates.has(d));
+
+  if (missing.length > 0) {
+    await supabase.from("services").insert(missing.map((service_date) => ({ service_date })));
+  }
+}
+
+// Every service needs a (possibly unassigned) slot for every AM Team / PM Team role.
+// Assignments are per-service - nothing here is shared with any other service.
+export async function ensureServiceLineupSlots(serviceId: string) {
+  const supabase = await createClient();
+  const [{ data: teams }, { data: roles }, { data: existing }] = await Promise.all([
+    supabase.from("teams").select("id"),
+    supabase.from("roles").select("id"),
+    supabase
+      .from("service_lineup_assignments")
+      .select("team_id, role_id")
+      .eq("service_id", serviceId),
+  ]);
+  if (!teams || !roles) return;
+
+  const existingKeys = new Set(
+    (existing ?? []).map((a) => `${a.team_id}_${a.role_id}`)
+  );
+
+  const missing = teams.flatMap((team) =>
+    roles
+      .filter((role) => !existingKeys.has(`${team.id}_${role.id}`))
+      .map((role) => ({ service_id: serviceId, team_id: team.id, role_id: role.id }))
+  );
+
+  if (missing.length > 0) {
+    await supabase.from("service_lineup_assignments").insert(missing);
+  }
+}
+
+const INSTRUMENTS = [
+  "Electric Guitar",
+  "Acoustic Guitar",
+  "Drums",
+  "Bass Guitar",
+  "Keyboard",
+  "Vocals",
+];
+
+export async function addVolunteer(formData: FormData) {
+  const name = String(formData.get("name") ?? "").trim();
+  if (!name) return;
+  const nickname = String(formData.get("nickname") ?? "").trim();
+  const instruments = formData
+    .getAll("instruments")
+    .map(String)
+    .filter((i) => INSTRUMENTS.includes(i));
+
+  const supabase = await createClient();
+  await supabase.from("volunteers").insert({
+    name,
+    nickname: nickname || null,
+    instruments,
+  });
+  revalidatePath("/volunteers");
+}
+
+export async function deleteVolunteer(id: string) {
+  const supabase = await createClient();
+  await supabase.from("volunteers").delete().eq("id", id);
+  revalidatePath("/volunteers");
+}
+
+export async function updateServiceLineupAssignment(
+  serviceId: string,
+  teamId: string,
+  roleId: string,
+  personId: string
+) {
+  const supabase = await createClient();
+  await supabase
+    .from("service_lineup_assignments")
+    .update({ person_id: personId || null })
+    .eq("service_id", serviceId)
+    .eq("team_id", teamId)
+    .eq("role_id", roleId);
+  revalidatePath(`/services/${serviceId}`);
 }
 
 export async function addService(formData: FormData) {
@@ -33,13 +134,6 @@ export async function addService(formData: FormData) {
 
   if (error || !service) return;
 
-  const { data: roles } = await supabase.from("roles").select("id");
-  if (roles && roles.length > 0) {
-    await supabase.from("lineup_assignments").insert(
-      roles.map((role) => ({ service_id: service.id, role_id: role.id }))
-    );
-  }
-
   revalidatePath("/");
   redirect(`/services/${service.id}`);
 }
@@ -51,16 +145,48 @@ export async function deleteService(id: string) {
   redirect("/");
 }
 
-export async function updateAssignment(
-  serviceId: string,
-  roleId: string,
-  personId: string
-) {
+export async function addSong(serviceId: string, formData: FormData) {
+  const name = String(formData.get("name") ?? "").trim();
+  if (!name) return;
+  const singerOrBand = String(formData.get("singer_or_band") ?? "").trim();
+  const version = String(formData.get("version") ?? "").trim();
+  const url = String(formData.get("url") ?? "").trim();
+
   const supabase = await createClient();
-  await supabase
-    .from("lineup_assignments")
-    .update({ person_id: personId || null })
-    .eq("service_id", serviceId)
-    .eq("role_id", roleId);
+  await supabase.from("songs").insert({
+    service_id: serviceId,
+    name,
+    singer_or_band: singerOrBand || null,
+    version: version || null,
+    url: url || null,
+  });
+  revalidatePath(`/services/${serviceId}`);
+}
+
+export async function deleteSong(serviceId: string, songId: string) {
+  const supabase = await createClient();
+  await supabase.from("songs").delete().eq("id", songId);
+  revalidatePath(`/services/${serviceId}`);
+}
+
+// "Reset Lineup" on a service clears its setlist back to empty.
+export async function resetServiceSongs(serviceId: string) {
+  const supabase = await createClient();
+  await supabase.from("songs").delete().eq("service_id", serviceId);
+  revalidatePath(`/services/${serviceId}`);
+}
+
+export async function addPlaylist(serviceId: string, formData: FormData) {
+  const url = String(formData.get("url") ?? "").trim();
+  if (!url) return;
+
+  const supabase = await createClient();
+  await supabase.from("playlists").insert({ service_id: serviceId, url });
+  revalidatePath(`/services/${serviceId}`);
+}
+
+export async function deletePlaylist(serviceId: string, playlistId: string) {
+  const supabase = await createClient();
+  await supabase.from("playlists").delete().eq("id", playlistId);
   revalidatePath(`/services/${serviceId}`);
 }
