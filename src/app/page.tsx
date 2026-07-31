@@ -18,7 +18,8 @@ export default async function Home() {
   const { data: services } = await supabase
     .from("services")
     .select("id, service_date, title")
-    .order("service_date", { ascending: false });
+    .eq("archived", false)
+    .order("service_date", { ascending: true });
 
   return (
     <div className="space-y-8">

@@ -50,6 +50,7 @@ alter table services drop column if exists session;
 alter table services drop constraint if exists services_session_check;
 alter table services drop column if exists team_id;
 drop index if exists services_date_session_idx;
+alter table services add column if not exists archived boolean not null default false;
 
 -- The old fixed-roster design is replaced by service_lineup_assignments below
 drop table if exists lineup_assignments;
@@ -80,6 +81,8 @@ create table if not exists songs (
 );
 alter table songs add column if not exists key text;
 alter table songs add column if not exists bpm integer;
+alter table songs add column if not exists time_signature_numerator integer not null default 4;
+alter table songs add column if not exists time_signature_denominator integer not null default 4;
 create index if not exists songs_service_id_idx on songs(service_id);
 
 -- Playlist links for a service

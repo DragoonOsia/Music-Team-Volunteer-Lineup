@@ -5,7 +5,6 @@ import AddSongModal from "@/components/AddSongModal";
 import AddPlaylistModal from "@/components/AddPlaylistModal";
 import ServiceActionsMenu from "@/components/ServiceActionsMenu";
 import ServiceLineupTabs from "@/components/ServiceLineupTabs";
-import SongKeyModal from "@/components/SongKeyModal";
 import EditSongModal from "@/components/EditSongModal";
 
 function formatDate(dateStr: string) {
@@ -27,7 +26,7 @@ export default async function ServiceDetailPage({
   const supabase = await createClient();
   const { data: service } = await supabase
     .from("services")
-    .select("id, service_date, title")
+    .select("id, service_date, title, archived")
     .eq("id", id)
     .single();
 
@@ -37,7 +36,11 @@ export default async function ServiceDetailPage({
 
   const [{ data: songs }, { data: playlists }, { data: teams }, { data: roles }, { data: volunteers }, { data: assignments }] =
     await Promise.all([
-      supabase.from("songs").select("id, name, singer_or_band, version, url, key, bpm").eq("service_id", id).order("created_at"),
+      supabase
+        .from("songs")
+        .select("id, name, singer_or_band, version, url, key, bpm, time_signature_numerator, time_signature_denominator")
+        .eq("service_id", id)
+        .order("created_at"),
       supabase.from("playlists").select("id, url").eq("service_id", id).order("created_at"),
       supabase.from("teams").select("id, name").order("sort_order"),
       supabase.from("roles").select("id, name, instrument").order("sort_order"),
@@ -53,6 +56,11 @@ export default async function ServiceDetailPage({
           {service.title && (
             <p className="text-sm text-muted">{service.title}</p>
           )}
+          {service.archived && (
+            <span className="mt-1 inline-block rounded-full bg-surface-2 px-2 py-0.5 text-xs text-muted">
+              Archived
+            </span>
+          )}
         </div>
         <form action={deleteService.bind(null, service.id)}>
           <button
@@ -66,7 +74,7 @@ export default async function ServiceDetailPage({
 
       <div className="flex flex-wrap items-center gap-2">
         <AddSongModal serviceId={service.id} />
-        <ServiceActionsMenu serviceId={service.id} />
+        <ServiceActionsMenu serviceId={service.id} archived={service.archived} />
         <AddPlaylistModal serviceId={service.id} />
       </div>
 
@@ -78,10 +86,17 @@ export default async function ServiceDetailPage({
               <div>
                 <div className="flex items-center gap-2 font-medium">
                   {song.name}
-                  <SongKeyModal serviceId={service.id} songId={song.id} currentKey={song.key} />
+                  {song.key && (
+                    <span className="rounded bg-surface px-1.5 py-0.5 text-xs font-medium">
+                      {song.key}
+                    </span>
+                  )}
                   {song.bpm !== null && (
                     <span className="text-xs text-muted">{song.bpm} BPM</span>
                   )}
+                  <span className="text-xs text-muted">
+                    {song.time_signature_numerator}/{song.time_signature_denominator}
+                  </span>
                 </div>
                 <div className="text-sm text-muted">
                   {[song.singer_or_band, song.version].filter(Boolean).join(" — ")}

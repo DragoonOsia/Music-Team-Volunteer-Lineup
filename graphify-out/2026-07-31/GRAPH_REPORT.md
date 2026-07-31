@@ -1,16 +1,16 @@
 # Graph Report - Music-Team-Volunteer-Lineup  (2026-07-31)
 
 ## Corpus Check
-- 32 files · ~6,554 words
+- 32 files · ~6,559 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 151 nodes · 194 edges · 20 communities (9 shown, 11 thin omitted)
+- 151 nodes · 199 edges · 20 communities (9 shown, 11 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6ac50a95`
+- Built from commit: `e0ed87b1`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -34,30 +34,30 @@
 - Boilerplate Icon Asset (window.svg)
 - Project Description (README)
 - ServiceLineupTabs.tsx
-- AddSongModal.tsx
+- EditSongModal.tsx
 
 ## God Nodes (most connected - your core abstractions)
-1. `createClient()` - 20 edges
+1. `createClient()` - 22 edges
 2. `compilerOptions` - 16 edges
 3. `include` - 7 edges
 4. `scripts` - 5 edges
 5. `ensureUpcomingSundays()` - 5 edges
 6. `Home()` - 4 edges
-7. `lib` - 4 edges
-8. `KeyPicker()` - 3 edges
-9. `nextSundays()` - 3 edges
-10. `ensureServiceLineupSlots()` - 3 edges
+7. `ServiceDetailPage()` - 4 edges
+8. `KeyPicker()` - 4 edges
+9. `ensureServiceLineupSlots()` - 4 edges
+10. `lib` - 4 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Home()` --calls--> `createClient()`  [EXTRACTED]
   src/app/page.tsx → src/lib/supabase/server.ts
+- `VolunteersPage()` --calls--> `createClient()`  [EXTRACTED]
+  src/app/volunteers/page.tsx → src/lib/supabase/server.ts
 - `ensureUpcomingSundays()` --calls--> `createClient()`  [EXTRACTED]
   src/lib/actions.ts → src/lib/supabase/server.ts
-- `Home()` --calls--> `ensureUpcomingSundays()`  [EXTRACTED]
-  src/app/page.tsx → src/lib/actions.ts
-- `ensureServiceLineupSlots()` --calls--> `createClient()`  [EXTRACTED]
+- `updateServiceLineupAssignment()` --calls--> `createClient()`  [EXTRACTED]
   src/lib/actions.ts → src/lib/supabase/server.ts
-- `addVolunteer()` --calls--> `createClient()`  [EXTRACTED]
+- `addSong()` --calls--> `createClient()`  [EXTRACTED]
   src/lib/actions.ts → src/lib/supabase/server.ts
 
 ## Import Cycles
@@ -70,8 +70,8 @@ Cohesion: 0.11
 Nodes (19): dom, dom.iterable, esnext, compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules (+11 more)
 
 ### Community 1 - "actions.ts"
-Cohesion: 0.13
-Nodes (18): formatDate(), ServiceDetailPage(), INSTRUMENTS, addPlaylist(), addService(), addSong(), addVolunteer(), deletePlaylist() (+10 more)
+Cohesion: 0.15
+Nodes (18): formatDate(), ServiceDetailPage(), VolunteersPage(), INSTRUMENTS, ServiceActionsMenu(), addPlaylist(), addService(), addVolunteer() (+10 more)
 
 ### Community 2 - "Dev Tooling Dependencies"
 Cohesion: 0.12
@@ -90,19 +90,19 @@ Cohesion: 0.33
 Nodes (4): geistMono, geistSans, metadata, GuitarLogo()
 
 ### Community 7 - "server.ts"
-Cohesion: 0.25
-Nodes (6): formatDate(), Home(), ensureUpcomingSundays(), nextSundays(), toDateKey(), Database
+Cohesion: 0.33
+Nodes (4): formatDate(), Home(), ensureUpcomingSundays(), Database
 
 ### Community 19 - "ServiceLineupTabs.tsx"
-Cohesion: 0.22
-Nodes (8): Assignment, Role, ServiceLineupTabs(), Team, Volunteer, displayName(), Volunteer, VolunteerCombobox()
+Cohesion: 0.20
+Nodes (9): Assignment, Role, ServiceLineupTabs(), Team, Volunteer, displayName(), Volunteer, VolunteerCombobox() (+1 more)
 
-### Community 20 - "AddSongModal.tsx"
-Cohesion: 0.21
-Nodes (3): Song, KeyPicker(), KEYS
+### Community 20 - "EditSongModal.tsx"
+Cohesion: 0.17
+Nodes (6): Song, KeyPicker(), KEYS, addSong(), updateSong(), updateSongKey()
 
 ## Knowledge Gaps
-- **66 isolated node(s):** `Song`, `Team`, `Role`, `Volunteer`, `Assignment` (+61 more)
+- **66 isolated node(s):** `Team`, `Role`, `Volunteer`, `Assignment`, `Volunteer` (+61 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -113,12 +113,12 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.039) - this node is a cross-community bridge._
 - **Why does `compilerOptions` connect `TypeScript Compiler Options` to `TypeScript File Globs`?**
   _High betweenness centrality (0.029) - this node is a cross-community bridge._
-- **What connects `Song`, `Team`, `Role` to the rest of the system?**
+- **What connects `Team`, `Role`, `Volunteer` to the rest of the system?**
   _66 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `TypeScript Compiler Options` be split into smaller, more focused modules?**
   _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
 - **Should `actions.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.1310344827586207 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.14814814814814814 - nodes in this community are weakly interconnected._
 - **Should `Dev Tooling Dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
 - **Should `package.json` be split into smaller, more focused modules?**

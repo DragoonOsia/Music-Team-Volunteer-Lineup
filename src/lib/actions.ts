@@ -145,6 +145,33 @@ export async function deleteService(id: string) {
   redirect("/");
 }
 
+export async function archiveService(id: string) {
+  const supabase = await createClient();
+  await supabase.from("services").update({ archived: true }).eq("id", id);
+  revalidatePath("/");
+  revalidatePath("/archive");
+  revalidatePath(`/services/${id}`);
+}
+
+export async function unarchiveService(id: string) {
+  const supabase = await createClient();
+  await supabase.from("services").update({ archived: false }).eq("id", id);
+  revalidatePath("/");
+  revalidatePath("/archive");
+  revalidatePath(`/services/${id}`);
+}
+
+function parseTimeSignature(formData: FormData) {
+  const numRaw = String(formData.get("time_signature_numerator") ?? "").trim();
+  const denRaw = String(formData.get("time_signature_denominator") ?? "").trim();
+  const numerator = numRaw ? Number(numRaw) : 4;
+  const denominator = denRaw ? Number(denRaw) : 4;
+  return {
+    time_signature_numerator: Number.isFinite(numerator) && numerator > 0 ? numerator : 4,
+    time_signature_denominator: Number.isFinite(denominator) && denominator > 0 ? denominator : 4,
+  };
+}
+
 export async function addSong(serviceId: string, formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   if (!name) return;
@@ -164,6 +191,7 @@ export async function addSong(serviceId: string, formData: FormData) {
     url: url || null,
     key: key || null,
     bpm: bpm !== null && !Number.isNaN(bpm) ? bpm : null,
+    ...parseTimeSignature(formData),
   });
   revalidatePath(`/services/${serviceId}`);
 }
@@ -193,14 +221,9 @@ export async function updateSong(serviceId: string, songId: string, formData: Fo
       url: url || null,
       key: key || null,
       bpm: bpm !== null && !Number.isNaN(bpm) ? bpm : null,
+      ...parseTimeSignature(formData),
     })
     .eq("id", songId);
-  revalidatePath(`/services/${serviceId}`);
-}
-
-export async function updateSongKey(serviceId: string, songId: string, key: string) {
-  const supabase = await createClient();
-  await supabase.from("songs").update({ key }).eq("id", songId);
   revalidatePath(`/services/${serviceId}`);
 }
 

@@ -53,6 +53,7 @@ export type Database = {
           service_date: string;
           title: string | null;
           notes: string | null;
+          archived: boolean;
           created_at: string;
         };
         Insert: {
@@ -60,6 +61,7 @@ export type Database = {
           service_date: string;
           title?: string | null;
           notes?: string | null;
+          archived?: boolean;
           created_at?: string;
         };
         Update: {
@@ -67,6 +69,7 @@ export type Database = {
           service_date?: string;
           title?: string | null;
           notes?: string | null;
+          archived?: boolean;
           created_at?: string;
         };
         Relationships: [];
@@ -134,6 +137,8 @@ export type Database = {
           url: string | null;
           key: string | null;
           bpm: number | null;
+          time_signature_numerator: number;
+          time_signature_denominator: number;
           sort_order: number;
           created_at: string;
         };
@@ -146,6 +151,8 @@ export type Database = {
           url?: string | null;
           key?: string | null;
           bpm?: number | null;
+          time_signature_numerator?: number;
+          time_signature_denominator?: number;
           sort_order?: number;
           created_at?: string;
         };
@@ -158,6 +165,8 @@ export type Database = {
           url?: string | null;
           key?: string | null;
           bpm?: number | null;
+          time_signature_numerator?: number;
+          time_signature_denominator?: number;
           sort_order?: number;
           created_at?: string;
         };

@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { updateSong } from "@/lib/actions";
 import KeyPicker from "@/components/KeyPicker";
 import BpmStepper from "@/components/BpmStepper";
+import TimeSignatureInput from "@/components/TimeSignatureInput";
 
 type Song = {
   id: string;
@@ -13,6 +14,8 @@ type Song = {
   url: string | null;
   key: string | null;
   bpm: number | null;
+  time_signature_numerator: number;
+  time_signature_denominator: number;
 };
 
 export default function EditSongModal({
@@ -26,10 +29,16 @@ export default function EditSongModal({
   const [isPending, startTransition] = useTransition();
   const [key, setKey] = useState<string | null>(song.key);
   const [bpm, setBpm] = useState<number | null>(song.bpm);
+  const [timeSignature, setTimeSignature] = useState({
+    numerator: song.time_signature_numerator,
+    denominator: song.time_signature_denominator,
+  });
 
   function handleSubmit(formData: FormData) {
     if (key) formData.set("key", key);
     if (bpm !== null) formData.set("bpm", String(bpm));
+    formData.set("time_signature_numerator", String(timeSignature.numerator));
+    formData.set("time_signature_denominator", String(timeSignature.denominator));
     startTransition(async () => {
       await updateSong(serviceId, song.id, formData);
       setOpen(false);
@@ -114,6 +123,14 @@ export default function EditSongModal({
               <div>
                 <span className="mb-1 block text-sm font-medium">BPM</span>
                 <BpmStepper value={bpm} onChange={setBpm} />
+              </div>
+              <div>
+                <span className="mb-1 block text-sm font-medium">Time Signature</span>
+                <TimeSignatureInput
+                  numerator={timeSignature.numerator}
+                  denominator={timeSignature.denominator}
+                  onChange={setTimeSignature}
+                />
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button

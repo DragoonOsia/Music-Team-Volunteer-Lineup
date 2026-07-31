@@ -1,11 +1,19 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { resetServiceSongs } from "@/lib/actions";
+import { useRouter } from "next/navigation";
+import { resetServiceSongs, archiveService, unarchiveService } from "@/lib/actions";
 
-export default function ServiceActionsMenu({ serviceId }: { serviceId: string }) {
+export default function ServiceActionsMenu({
+  serviceId,
+  archived,
+}: {
+  serviceId: string;
+  archived: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   function handleReset() {
     setOpen(false);
@@ -17,6 +25,18 @@ export default function ServiceActionsMenu({ serviceId }: { serviceId: string })
     }
     startTransition(() => {
       resetServiceSongs(serviceId);
+    });
+  }
+
+  function handleArchiveToggle() {
+    setOpen(false);
+    startTransition(async () => {
+      if (archived) {
+        await unarchiveService(serviceId);
+      } else {
+        await archiveService(serviceId);
+        router.push("/");
+      }
     });
   }
 
@@ -33,6 +53,12 @@ export default function ServiceActionsMenu({ serviceId }: { serviceId: string })
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="absolute right-0 z-50 mt-1 w-44 rounded-md border border-border bg-surface-2 py-1 shadow-lg">
+            <button
+              onClick={handleArchiveToggle}
+              className="block w-full px-3 py-2 text-left text-sm hover:bg-surface"
+            >
+              {archived ? "Unarchive" : "Archive"}
+            </button>
             <button
               onClick={handleReset}
               className="block w-full px-3 py-2 text-left text-sm text-danger hover:bg-surface"

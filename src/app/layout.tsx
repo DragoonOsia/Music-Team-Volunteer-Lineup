@@ -42,6 +42,9 @@ export default function RootLayout({
             <Link href="/volunteers" className="text-muted hover:text-foreground">
               Volunteers
             </Link>
+            <Link href="/archive" className="text-muted hover:text-foreground">
+              Archive
+            </Link>
           </nav>
         </header>
         <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
