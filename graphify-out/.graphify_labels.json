@@ -6,7 +6,7 @@
   "4": "TypeScript File Globs",
   "5": "app/page.tsx",
   "6": "layout.tsx",
-  "7": "server.ts",
+  "7": "createClient",
   "8": "Home / Services List Page",
   "9": "ESLint Flat Config",
   "10": "Next.js Config",
