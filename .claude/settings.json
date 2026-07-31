@@ -8,5 +8,27 @@
       "mcp__Claude_Browser__find",
       "mcp__Claude_Browser__resize_window"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/Rameses5/AppData/Roaming/Python/Python314/Scripts/graphify.EXE hook-guard search"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/Rameses5/AppData/Roaming/Python/Python314/Scripts/graphify.EXE hook-guard read"
+          }
+        ]
+      }
+    ]
   }
 }
