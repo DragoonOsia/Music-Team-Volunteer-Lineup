@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { deleteVolunteer } from "@/lib/actions";
 import AddVolunteerModal from "@/components/AddVolunteerModal";
+import EditVolunteerModal from "@/components/EditVolunteerModal";
 
 export default async function VolunteersPage() {
   const supabase = await createClient();
@@ -62,14 +63,17 @@ export default async function VolunteersPage() {
                     )}
                   </td>
                   <td className="py-3 text-right">
-                    <form action={deleteVolunteer.bind(null, v.id)}>
-                      <button
-                        type="submit"
-                        className="inline-flex min-h-11 items-center rounded-btn border border-rule px-3 py-1.5 font-mono text-[11px] font-medium tracking-[0.14em] text-danger uppercase hover:border-danger sm:min-h-0"
-                      >
-                        Remove
-                      </button>
-                    </form>
+                    <div className="flex justify-end gap-2">
+                      <EditVolunteerModal volunteer={v} />
+                      <form action={deleteVolunteer.bind(null, v.id)}>
+                        <button
+                          type="submit"
+                          className="inline-flex min-h-11 items-center rounded-btn border border-rule px-3 py-1.5 font-mono text-[11px] font-medium tracking-[0.14em] text-danger uppercase hover:border-danger sm:min-h-0"
+                        >
+                          Remove
+                        </button>
+                      </form>
+                    </div>
                   </td>
                 </tr>
               ))}

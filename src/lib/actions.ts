@@ -109,6 +109,23 @@ export async function addVolunteer(formData: FormData) {
   revalidatePath("/volunteers");
 }
 
+export async function updateVolunteer(id: string, formData: FormData) {
+  const name = String(formData.get("name") ?? "").trim();
+  if (!name) return;
+  const nickname = String(formData.get("nickname") ?? "").trim();
+  const instruments = formData
+    .getAll("instruments")
+    .map(String)
+    .filter((i) => INSTRUMENTS.includes(i));
+
+  const supabase = await createClient();
+  await supabase
+    .from("volunteers")
+    .update({ name, nickname: nickname || null, instruments })
+    .eq("id", id);
+  revalidatePath("/volunteers");
+}
+
 export async function deleteVolunteer(id: string) {
   const supabase = await createClient();
   await supabase.from("volunteers").delete().eq("id", id);
