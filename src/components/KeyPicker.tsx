@@ -14,10 +14,10 @@ export default function KeyPicker({
           key={k}
           type="button"
           onClick={() => onSelect(k)}
-          className={`rounded-md px-2 py-1.5 text-sm font-medium transition-colors ${
+          className={`rounded-in border px-2 py-1.5 text-sm font-medium transition-colors ${
             k === value
-              ? "bg-accent text-accent-foreground"
-              : "bg-surface text-foreground hover:bg-surface-2"
+              ? "border-accent bg-accent text-accent-foreground"
+              : "border-rule bg-transparent text-ink hover:border-rule-strong"
           }`}
         >
           {k}

@@ -72,17 +72,17 @@ export default function VolunteerCombobox({
         }}
         onChange={(e) => setQuery(e.target.value)}
         onBlur={() => setOpen(false)}
-        className="w-full rounded-md border border-border-strong bg-transparent px-3 py-1.5 text-sm disabled:opacity-50"
+        className="w-full rounded-in border border-rule bg-transparent px-3 py-1.5 text-sm disabled:opacity-50"
       />
       {open && (
-        <div className="absolute right-0 left-0 z-50 mt-1 max-h-52 overflow-y-auto rounded-md border border-border bg-surface-2 py-1 shadow-lg">
+        <div className="absolute right-0 left-0 z-50 mt-1 max-h-52 overflow-y-auto rounded-lg border border-rule border-t-2 border-t-rule-strong bg-card py-1">
           <button
             type="button"
             onMouseDown={(e) => {
               e.preventDefault();
               pick("");
             }}
-            className="block w-full px-3 py-1.5 text-left text-sm text-muted hover:bg-surface"
+            className="block w-full px-3 py-1.5 text-left text-sm text-ink3 hover:text-ink"
           >
             — Unassigned —
           </button>
@@ -94,13 +94,13 @@ export default function VolunteerCombobox({
                 e.preventDefault();
                 pick(v.id);
               }}
-              className="block w-full px-3 py-1.5 text-left text-sm hover:bg-surface"
+              className="block w-full px-3 py-1.5 text-left text-sm text-ink hover:text-accent"
             >
               {displayName(v)}
             </button>
           ))}
           {filtered.length === 0 && (
-            <p className="px-3 py-1.5 text-sm text-muted">No matches.</p>
+            <p className="px-3 py-1.5 text-sm text-ink3">No matches.</p>
           )}
         </div>
       )}

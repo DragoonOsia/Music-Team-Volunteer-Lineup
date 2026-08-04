@@ -8,11 +8,11 @@ export default function BpmStepper({
   const current = value ?? 0;
 
   return (
-    <div className="flex w-fit items-center rounded-md border border-border-strong">
+    <div className="flex w-fit items-center rounded-in border border-rule">
       <button
         type="button"
         onClick={() => onChange(Math.max(0, current - 1))}
-        className="px-3 py-1.5 text-sm text-muted hover:text-foreground"
+        className="px-3 py-1.5 text-sm text-ink3 hover:text-ink"
         aria-label="Decrease BPM"
       >
         −
@@ -27,12 +27,12 @@ export default function BpmStepper({
           const n = e.target.value === "" ? null : Number(e.target.value);
           onChange(n === null || Number.isNaN(n) ? null : Math.max(0, n));
         }}
-        className="w-14 border-x border-border-strong bg-transparent px-2 py-1.5 text-center text-sm [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        className="w-14 border-x border-rule bg-transparent px-2 py-1.5 text-center text-sm [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
       />
       <button
         type="button"
         onClick={() => onChange(current + 1)}
-        className="px-3 py-1.5 text-sm text-muted hover:text-foreground"
+        className="px-3 py-1.5 text-sm text-ink3 hover:text-ink"
         aria-label="Increase BPM"
       >
         +
