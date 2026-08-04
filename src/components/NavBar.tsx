@@ -16,8 +16,8 @@ export default function NavBar() {
 
   return (
     <header className="border-b border-rule bg-paper">
-      <nav className="mx-auto flex max-w-5xl items-center justify-between gap-6 px-8 py-5">
-        <div className="flex items-center gap-7">
+      <nav className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-5 py-4 sm:px-8 sm:py-5">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 sm:gap-x-7">
           {NAV_ITEMS.map((item) => {
             const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
             return (

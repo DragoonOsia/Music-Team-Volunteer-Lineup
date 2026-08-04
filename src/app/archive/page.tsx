@@ -22,31 +22,31 @@ export default async function ArchivePage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-xl font-semibold">Archive</h1>
-        <p className="text-sm text-muted">
-          Services you&apos;ve archived. Unarchive one to bring it back to the main list.
+        <h1 className="font-serif text-2xl text-ink">Archive</h1>
+        <p className="mt-1 font-serif text-lg text-ink2 italic">
+          Services you&apos;ve archived. Restore one to bring it back to the main list.
         </p>
       </div>
 
-      <ul className="divide-y divide-border">
+      <ul className="divide-y divide-rule">
         {(services ?? []).map((service) => (
-          <li key={service.id} className="flex items-center justify-between gap-3 py-3">
-            <Link href={`/services/${service.id}`} className="hover:opacity-70">
+          <li key={service.id} className="flex items-center justify-between gap-3 py-4">
+            <Link href={`/services/${service.id}`} className="text-[19px] text-ink hover:opacity-80">
               {formatDate(service.service_date)}
               {service.title ? ` — ${service.title}` : ""}
             </Link>
             <form action={unarchiveService.bind(null, service.id)}>
               <button
                 type="submit"
-                className="rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium hover:bg-surface"
+                className="inline-flex min-h-11 items-center rounded-btn border border-rule px-3 py-1.5 font-mono text-[11px] font-medium tracking-[0.14em] text-ink uppercase hover:border-rule-strong sm:min-h-0"
               >
-                Unarchive
+                Restore
               </button>
             </form>
           </li>
         ))}
         {(!services || services.length === 0) && (
-          <li className="py-6 text-center text-sm text-muted">
+          <li className="py-6 text-center text-sm text-ink3 italic">
             No archived services.
           </li>
         )}

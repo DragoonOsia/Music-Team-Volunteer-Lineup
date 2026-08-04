@@ -1,16 +1,16 @@
 # Graph Report - Music-Team-Volunteer-Lineup  (2026-08-04)
 
 ## Corpus Check
-- 36 files · ~8,539 words
+- 36 files · ~8,902 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 173 nodes · 249 edges · 21 communities (10 shown, 11 thin omitted)
+- 174 nodes · 250 edges · 21 communities (10 shown, 11 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3e253c64`
+- Built from commit: `24ea85b7`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -44,9 +44,9 @@
 4. `ensureUpcomingSundays()` - 7 edges
 5. `archivePastServices()` - 7 edges
 6. `include` - 7 edges
-7. `ensureServiceLineupSlots()` - 6 edges
-8. `scripts` - 5 edges
-9. `ServicesPage()` - 5 edges
+7. `ServicesPage()` - 6 edges
+8. `ensureServiceLineupSlots()` - 6 edges
+9. `scripts` - 5 edges
 10. `ServiceDetailPage()` - 4 edges
 
 ## Surprising Connections (you probably didn't know these)
@@ -95,8 +95,8 @@ Cohesion: 0.20
 Nodes (7): metadata, newsreader, plexMono, NAV_ITEMS, choose(), Theme, ThemeToggle()
 
 ### Community 7 - "app/page.tsx"
-Cohesion: 0.26
-Nodes (8): formatDate(), Home(), todayKey(), formatDate(), ServicesPage(), archivePastServices(), ensureUpcomingSundays(), Database
+Cohesion: 0.25
+Nodes (9): formatDate(), Home(), todayKey(), formatDate(), ServicesPage(), statusFor(), archivePastServices(), ensureUpcomingSundays() (+1 more)
 
 ### Community 19 - "ServiceLineupTabs.tsx"
 Cohesion: 0.22
@@ -115,7 +115,7 @@ Nodes (9): **/*.mts, .next/dev/types/**/*.ts, next-env.d.ts, .next/types/**/*.ts
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `createClient()` connect `actions.ts` to `ServiceLineupTabs.tsx`, `app/page.tsx`?**
-  _High betweenness centrality (0.033) - this node is a cross-community bridge._
+  _High betweenness centrality (0.034) - this node is a cross-community bridge._
 - **Why does `devDependencies` connect `Dev Tooling Dependencies` to `package.json`?**
   _High betweenness centrality (0.029) - this node is a cross-community bridge._
 - **Why does `compilerOptions` connect `compilerOptions` to `include`?**

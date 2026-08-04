@@ -36,11 +36,14 @@ export default async function Home() {
 
   if (!service) {
     return (
-      <div className="space-y-4">
-        <h1 className="text-xl font-semibold">No upcoming service</h1>
-        <p className="text-sm text-muted">
+      <div className="space-y-3">
+        <p className="font-mono text-[11px] font-medium tracking-[0.22em] text-accent uppercase">
+          Worship Team
+        </p>
+        <h1 className="font-serif text-2xl text-ink">No upcoming service</h1>
+        <p className="font-serif text-lg text-ink2 italic">
           Nothing scheduled yet.{" "}
-          <Link href="/services" className="underline">
+          <Link href="/services" className="text-accent not-italic underline">
             Go to Services
           </Link>{" "}
           to add one.
@@ -60,18 +63,24 @@ export default async function Home() {
     ]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-start justify-between">
+    <div className="space-y-10">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm text-muted">Upcoming Sunday</p>
-          <h1 className="text-xl font-semibold">{formatDate(service.service_date)}</h1>
-          {service.title && <p className="text-sm text-muted">{service.title}</p>}
+          <p className="font-mono text-[11px] font-medium tracking-[0.22em] text-accent uppercase">
+            Worship Team
+          </p>
+          <h1 className="mt-2 font-serif text-[40px] leading-[1.05] text-ink sm:text-[52px]">
+            {formatDate(service.service_date)}
+          </h1>
+          {service.title && (
+            <p className="mt-2 font-serif text-lg text-ink2 italic">{service.title}</p>
+          )}
         </div>
         <Link
           href={`/services/${service.id}`}
-          className="rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium hover:bg-surface"
+          className="inline-flex min-h-11 w-fit items-center rounded-btn border border-rule px-4 py-2 font-mono text-xs font-medium tracking-[0.14em] text-ink uppercase hover:border-rule-strong sm:min-h-0"
         >
-          Edit service →
+          Edit Service →
         </Link>
       </div>
 

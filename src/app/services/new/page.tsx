@@ -31,7 +31,7 @@ export default function NewServicePage() {
             id="title"
             type="text"
             name="title"
-            placeholder="e.g. Sunday Morning Service"
+            placeholder="e.g. Sunday Service"
             className="w-full rounded-md border border-border-strong bg-transparent px-3 py-2 text-sm"
           />
         </div>
