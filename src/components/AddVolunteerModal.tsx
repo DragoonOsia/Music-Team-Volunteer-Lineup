@@ -28,18 +28,18 @@ export default function AddVolunteerModal() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-foreground hover:bg-accent-hover"
+        className="rounded-btn bg-accent px-4 py-2 text-sm font-medium text-accent-foreground hover:opacity-90"
       >
         + Add
       </button>
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-scrim p-4"
           onClick={() => setOpen(false)}
         >
           <div
-            className="w-full max-w-sm rounded-lg border border-border bg-surface-2 p-6"
+            className="w-full max-w-sm rounded-lg border border-rule border-t-2 border-t-rule-strong bg-card p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="mb-4 text-lg font-semibold">Add Volunteer</h2>
@@ -53,18 +53,18 @@ export default function AddVolunteerModal() {
                   name="name"
                   type="text"
                   required
-                  className="w-full rounded-md border border-border-strong bg-transparent px-3 py-2 text-sm"
+                  className="w-full rounded-in border border-rule bg-transparent px-3 py-2 text-sm"
                 />
               </div>
               <div>
                 <label htmlFor="v-nickname" className="mb-1 block text-sm font-medium">
-                  Nickname <span className="text-muted">(optional)</span>
+                  Nickname <span className="text-ink3">(optional)</span>
                 </label>
                 <input
                   id="v-nickname"
                   name="nickname"
                   type="text"
-                  className="w-full rounded-md border border-border-strong bg-transparent px-3 py-2 text-sm"
+                  className="w-full rounded-in border border-rule bg-transparent px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -84,14 +84,14 @@ export default function AddVolunteerModal() {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="rounded-md px-4 py-2 text-sm text-muted hover:text-foreground"
+                  className="rounded-btn px-4 py-2 text-sm text-ink3 hover:text-ink"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-foreground hover:bg-accent-hover disabled:opacity-50"
+                  className="rounded-btn bg-accent px-4 py-2 text-sm font-medium text-accent-foreground hover:opacity-90 disabled:opacity-50"
                 >
                   Save
                 </button>

@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Static design-reference bundle, not app source - ships its own
+    // runtime (support.js) that isn't meant to be linted as our code.
+    "design_handoff_hymnal_theme/**",
   ]),
 ]);
 

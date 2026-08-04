@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { ensureUpcomingSundays, ensureServiceLineupSlots } from "@/lib/actions";
+import { ensureUpcomingSundays, ensureServiceLineupSlots, archivePastServices } from "@/lib/actions";
 import ReadOnlyLineupTabs from "@/components/ReadOnlyLineupTabs";
 
 function formatDate(dateStr: string) {
@@ -21,6 +21,7 @@ function todayKey() {
 }
 
 export default async function Home() {
+  await archivePastServices();
   await ensureUpcomingSundays(3);
 
   const supabase = await createClient();

@@ -42,6 +42,16 @@ export async function ensureUpcomingSundays(count = 3) {
   }
 }
 
+export async function archivePastServices() {
+  const supabase = await createClient();
+  const today = toDateKey(new Date());
+  await supabase
+    .from("services")
+    .update({ archived: true })
+    .lt("service_date", today)
+    .eq("archived", false);
+}
+
 // Every service needs a (possibly unassigned) slot for every AM Team / PM Team role.
 // Assignments are per-service - nothing here is shared with any other service.
 export async function ensureServiceLineupSlots(serviceId: string) {

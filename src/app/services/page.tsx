@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { ensureUpcomingSundays } from "@/lib/actions";
+import { ensureUpcomingSundays, archivePastServices } from "@/lib/actions";
 
 function formatDate(dateStr: string) {
   return new Date(`${dateStr}T00:00:00`).toLocaleDateString(undefined, {
@@ -12,6 +12,7 @@ function formatDate(dateStr: string) {
 }
 
 export default async function ServicesPage() {
+  await archivePastServices();
   await ensureUpcomingSundays(3);
 
   const supabase = await createClient();

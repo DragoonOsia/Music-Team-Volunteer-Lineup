@@ -45,23 +45,23 @@ export default function ServiceActionsMenu({
       <button
         onClick={() => setOpen((o) => !o)}
         disabled={isPending}
-        className="rounded-md border border-border-strong px-3 py-2 text-sm font-medium disabled:opacity-50"
+        className="rounded-btn border border-rule px-3 py-2 text-sm font-medium hover:border-rule-strong disabled:opacity-50"
       >
         Actions ▾
       </button>
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 z-50 mt-1 w-44 rounded-md border border-border bg-surface-2 py-1 shadow-lg">
+          <div className="absolute right-0 z-50 mt-1 w-44 rounded-lg border border-rule border-t-2 border-t-rule-strong bg-card py-1">
             <button
               onClick={handleArchiveToggle}
-              className="block w-full px-3 py-2 text-left text-sm hover:bg-surface"
+              className="block w-full px-3 py-2 text-left text-sm text-ink2 hover:text-ink"
             >
-              {archived ? "Unarchive" : "Archive"}
+              {archived ? "Restore" : "Archive"}
             </button>
             <button
               onClick={handleReset}
-              className="block w-full px-3 py-2 text-left text-sm text-danger hover:bg-surface"
+              className="block w-full px-3 py-2 text-left text-sm text-danger hover:opacity-80"
             >
               Reset Lineup
             </button>

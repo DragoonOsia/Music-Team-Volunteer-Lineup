@@ -1,11 +1,11 @@
-# Graph Report - Music-Team-Volunteer-Lineup  (2026-08-04)
+# Graph Report - Music-Team-Volunteer-Lineup  (2026-08-03)
 
 ## Corpus Check
-- 39 files · ~125,819 words
+- 39 files · ~125,774 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 266 nodes · 417 edges · 22 communities (11 shown, 11 thin omitted)
+- 265 nodes · 410 edges · 23 communities (11 shown, 12 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
@@ -22,6 +22,7 @@
 - support.js
 - ReadOnlyLineupTabs.tsx
 - layout.tsx
+- client.ts
 - Home / Services List Page
 - ESLint Flat Config
 - Next.js Config
@@ -38,7 +39,7 @@
 - Handoff: "Hymnal" theme for Worship Team Lineup
 
 ## God Nodes (most connected - your core abstractions)
-1. `createClient()` - 28 edges
+1. `createClient()` - 27 edges
 2. `compilerOptions` - 16 edges
 3. `Handoff: "Hymnal" theme for Worship Team Lineup` - 13 edges
 4. `Screens / views` - 11 edges
@@ -56,15 +57,15 @@
   design_handoff_hymnal_theme/support.js → package.json
 - `VolunteersPage()` --calls--> `createClient()`  [EXTRACTED]
   src/app/volunteers/page.tsx → src/lib/supabase/server.ts
-- `updateServiceLineupAssignment()` --calls--> `createClient()`  [EXTRACTED]
-  src/lib/actions.ts → src/lib/supabase/server.ts
 - `ArchivePage()` --calls--> `createClient()`  [EXTRACTED]
   src/app/archive/page.tsx → src/lib/supabase/server.ts
+- `Home()` --calls--> `ensureServiceLineupSlots()`  [EXTRACTED]
+  src/app/page.tsx → src/lib/actions.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (22 total, 11 thin omitted)
+## Communities (23 total, 12 thin omitted)
 
 ### Community 0 - "compilerOptions"
 Cohesion: 0.07
@@ -95,8 +96,8 @@ Cohesion: 0.20
 Nodes (7): metadata, newsreader, plexMono, NAV_ITEMS, choose(), Theme, ThemeToggle()
 
 ### Community 19 - "ServiceLineupTabs.tsx"
-Cohesion: 0.22
-Nodes (9): Assignment, Role, ServiceLineupTabs(), Team, Volunteer, displayName(), Volunteer, VolunteerCombobox() (+1 more)
+Cohesion: 0.25
+Nodes (7): Assignment, Role, Team, Volunteer, displayName(), Volunteer, VolunteerCombobox()
 
 ### Community 20 - "EditSongModal.tsx"
 Cohesion: 0.26
@@ -109,7 +110,7 @@ Nodes (26): 10. Print / share band sheet — NEW, 1. Today — desktop (`src/app
 ## Knowledge Gaps
 - **95 isolated node(s):** `eslintConfig`, `nextConfig`, `name`, `version`, `private` (+90 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -123,7 +124,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `compilerOptions` be split into smaller, more focused modules?**
   _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
 - **Should `actions.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.09714285714285714 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10175763182238667 - nodes in this community are weakly interconnected._
 - **Should `Dev Tooling Dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
 - **Should `package.json` be split into smaller, more focused modules?**
