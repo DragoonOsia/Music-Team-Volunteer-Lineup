@@ -18,9 +18,9 @@ export default function TimeSignatureInput({
           const n = Number(e.target.value);
           onChange({ numerator: Number.isFinite(n) && n > 0 ? n : 1, denominator });
         }}
-        className="w-14 rounded-in border border-rule bg-transparent px-2 py-1.5 text-center text-sm [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        className="h-[46px] w-[46px] rounded-in border border-rule bg-transparent text-center font-mono text-base [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
       />
-      <span className="text-ink3">/</span>
+      <span className="font-mono text-base text-ink3">/</span>
       <input
         type="number"
         inputMode="numeric"
@@ -30,7 +30,7 @@ export default function TimeSignatureInput({
           const n = Number(e.target.value);
           onChange({ numerator, denominator: Number.isFinite(n) && n > 0 ? n : 1 });
         }}
-        className="w-14 rounded-in border border-rule bg-transparent px-2 py-1.5 text-center text-sm [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        className="h-[46px] w-[46px] rounded-in border border-rule bg-transparent text-center font-mono text-base [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
       />
     </div>
   );

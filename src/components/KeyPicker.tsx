@@ -14,7 +14,7 @@ export default function KeyPicker({
           key={k}
           type="button"
           onClick={() => onSelect(k)}
-          className={`rounded-in border px-2 py-1.5 text-sm font-medium transition-colors ${
+          className={`min-h-11 rounded-in border px-2 py-1.5 font-mono text-sm font-semibold transition-colors sm:min-h-0 ${
             k === value
               ? "border-accent bg-accent text-accent-foreground"
               : "border-rule bg-transparent text-ink hover:border-rule-strong"

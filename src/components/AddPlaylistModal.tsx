@@ -2,6 +2,12 @@
 
 import { useState, useTransition } from "react";
 import { addPlaylist } from "@/lib/actions";
+import Modal from "@/components/Modal";
+
+const FIELD_LABEL =
+  "mb-1 block font-mono text-[10px] font-medium tracking-[0.18em] text-ink3 uppercase";
+const FIELD_INPUT =
+  "w-full rounded-in border border-rule bg-transparent px-3 py-2 text-base sm:text-sm";
 
 export default function AddPlaylistModal({ serviceId }: { serviceId: string }) {
   const [open, setOpen] = useState(false);
@@ -18,55 +24,44 @@ export default function AddPlaylistModal({ serviceId }: { serviceId: string }) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-btn border border-rule px-4 py-2 text-sm font-medium hover:border-rule-strong"
+        className="inline-flex min-h-11 items-center rounded-btn border border-rule px-4 py-2 font-mono text-xs font-medium tracking-[0.14em] text-ink uppercase hover:border-rule-strong sm:min-h-0"
       >
         Add Playlist
       </button>
 
-      {open && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-scrim p-4"
-          onClick={() => setOpen(false)}
-        >
-          <div
-            className="w-full max-w-sm rounded-lg border border-rule border-t-2 border-t-rule-strong bg-card p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="mb-4 text-lg font-semibold">Add Playlist</h2>
-            <form action={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="p-url" className="mb-1 block text-sm font-medium">
-                  Playlist URL
-                </label>
-                <input
-                  id="p-url"
-                  name="url"
-                  type="url"
-                  required
-                  placeholder="https://..."
-                  className="w-full rounded-in border border-rule bg-transparent px-3 py-2 text-sm"
-                />
-              </div>
-              <div className="flex justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  className="rounded-btn px-4 py-2 text-sm text-ink3 hover:text-ink"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isPending}
-                  className="rounded-btn bg-accent px-4 py-2 text-sm font-medium text-accent-foreground hover:opacity-90 disabled:opacity-50"
-                >
-                  Save
-                </button>
-              </div>
-            </form>
+      <Modal open={open} onClose={() => setOpen(false)} title="Add Playlist">
+        <form action={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="p-url" className={FIELD_LABEL}>
+              Playlist URL
+            </label>
+            <input
+              id="p-url"
+              name="url"
+              type="url"
+              required
+              placeholder="https://..."
+              className={FIELD_INPUT}
+            />
           </div>
-        </div>
-      )}
+          <div className="flex justify-end gap-2 pt-2">
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="inline-flex min-h-11 items-center rounded-btn px-4 py-2 font-mono text-[11px] font-medium tracking-[0.14em] text-ink3 uppercase hover:text-ink sm:min-h-0"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isPending}
+              className="inline-flex min-h-11 items-center rounded-btn bg-accent px-4 py-2 font-mono text-[11px] font-medium tracking-[0.14em] text-accent-foreground uppercase hover:opacity-90 disabled:opacity-60 sm:min-h-0"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </Modal>
     </>
   );
 }

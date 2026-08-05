@@ -46,15 +46,15 @@ export default function ServiceLineupTabs({
 
   return (
     <div>
-      <div className="mb-3 flex gap-2 border-b border-border">
+      <div className="mb-4 flex gap-6 border-b border-rule">
         {teams.map((team) => (
           <button
             key={team.id}
             onClick={() => setActiveTeamId(team.id)}
-            className={`-mb-px border-b-2 px-3 py-2 text-sm font-medium ${
+            className={`-mb-px border-b-2 pb-2 font-mono text-xs tracking-[0.14em] uppercase ${
               team.id === activeTeamId
-                ? "border-accent"
-                : "border-transparent text-muted hover:text-foreground"
+                ? "border-accent font-semibold text-ink"
+                : "border-transparent font-normal text-ink3 hover:text-ink"
             }`}
           >
             {team.name}
@@ -62,7 +62,7 @@ export default function ServiceLineupTabs({
         ))}
       </div>
 
-      <div className="divide-y divide-border rounded-lg border border-border px-4">
+      <div className="divide-y divide-rule">
         {roles.map((role) => {
           // Exempt roles (Vocals, Musical Director) show everyone who has the
           // skill, full stop - an instrument booking elsewhere never hides
@@ -78,8 +78,13 @@ export default function ServiceLineupTabs({
           const currentPersonId = assignmentByRole.get(role.id) ?? null;
 
           return (
-            <div key={role.id} className="flex flex-col gap-1.5 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-              <span className="text-sm font-medium">{role.name}</span>
+            <div
+              key={role.id}
+              className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+            >
+              <span className="shrink-0 font-mono text-[10px] font-medium tracking-[0.18em] text-ink3 uppercase sm:w-40">
+                {role.name}
+              </span>
               <VolunteerCombobox
                 key={`${activeTeamId}_${role.id}`}
                 value={currentPersonId}
@@ -92,7 +97,7 @@ export default function ServiceLineupTabs({
           );
         })}
         {roles.length === 0 && (
-          <p className="py-6 text-center text-sm text-muted">
+          <p className="py-6 text-center text-sm text-ink3 italic">
             No roles set up yet.
           </p>
         )}

@@ -7,6 +7,11 @@ import ServiceActionsMenu from "@/components/ServiceActionsMenu";
 import ServiceLineupTabs from "@/components/ServiceLineupTabs";
 import EditSongModal from "@/components/EditSongModal";
 
+const SECTION_LABEL =
+  "mb-3 border-b-2 border-rule-strong pb-2 font-mono text-[11px] font-medium tracking-[0.2em] text-ink3 uppercase";
+const DANGER_BUTTON =
+  "inline-flex min-h-11 items-center rounded-btn border border-rule px-3 py-1.5 font-mono text-[11px] font-medium tracking-[0.14em] text-danger uppercase hover:border-danger sm:min-h-0";
+
 function formatDate(dateStr: string) {
   return new Date(`${dateStr}T00:00:00`).toLocaleDateString(undefined, {
     weekday: "long",
@@ -48,26 +53,27 @@ export default async function ServiceDetailPage({
       supabase.from("service_lineup_assignments").select("team_id, role_id, person_id").eq("service_id", id),
     ]);
 
+  const emptySlotCount = Math.max(0, 3 - (songs?.length ?? 0));
+
   return (
-    <div className="space-y-8">
-      <div className="flex items-start justify-between">
+    <div className="space-y-10">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-xl font-semibold">{formatDate(service.service_date)}</h1>
+          <h1 className="font-serif text-[28px] leading-tight text-ink sm:text-[42px]">
+            {formatDate(service.service_date)}
+          </h1>
           {service.title && (
-            <p className="text-sm text-muted">{service.title}</p>
+            <p className="mt-1 font-serif text-lg text-ink2 italic">{service.title}</p>
           )}
           {service.archived && (
-            <span className="mt-1 inline-block rounded-full bg-surface-2 px-2 py-0.5 text-xs text-muted">
+            <span className="mt-2 inline-block rounded-in border border-rule px-2 py-0.5 font-mono text-[10px] font-medium tracking-[0.14em] text-ink3 uppercase">
               Archived
             </span>
           )}
         </div>
         <form action={deleteService.bind(null, service.id)}>
-          <button
-            type="submit"
-            className="rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium text-danger hover:border-danger hover:bg-surface"
-          >
-            Delete service
+          <button type="submit" className={DANGER_BUTTON}>
+            Delete Service
           </button>
         </form>
       </div>
@@ -79,87 +85,97 @@ export default async function ServiceDetailPage({
       </div>
 
       <div>
-        <h2 className="mb-2 text-base font-semibold">Songs</h2>
-        <ul className="divide-y divide-border">
-          {(songs ?? []).map((song) => (
-            <li key={song.id} className="flex items-center justify-between gap-3 py-3">
-              <div>
-                <div className="flex items-center gap-2 font-medium">
-                  {song.name}
-                  {(song.key || song.alt_key) && (
-                    <span className="rounded-in border border-rule bg-card px-1.5 py-0.5 font-mono text-xs font-medium text-ink">
-                      {[song.key, song.alt_key].filter(Boolean).join(" / ")}
-                    </span>
-                  )}
-                  {song.bpm !== null && (
-                    <span className="text-xs text-muted">{song.bpm} BPM</span>
-                  )}
-                  <span className="text-xs text-muted">
-                    {song.time_signature_numerator}/{song.time_signature_denominator}
+        <h2 className={SECTION_LABEL}>Songs</h2>
+        <div className="space-y-3">
+          {(songs ?? []).length > 0 && (
+            <ul className="divide-y divide-rule">
+              {(songs ?? []).map((song) => (
+                <li
+                  key={song.id}
+                  className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+                >
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[20px] text-ink">{song.name}</span>
+                      {(song.key || song.alt_key) && (
+                        <span className="rounded-in border border-rule bg-card px-1.5 py-0.5 font-mono text-xs font-semibold text-ink">
+                          {[song.key, song.alt_key].filter(Boolean).join(" / ")}
+                        </span>
+                      )}
+                      {song.bpm !== null && (
+                        <span className="font-mono text-xs text-ink3">{song.bpm} BPM</span>
+                      )}
+                      <span className="font-mono text-xs text-ink3">
+                        {song.time_signature_numerator}/{song.time_signature_denominator}
+                      </span>
+                    </div>
+                    <div className="mt-0.5 text-sm text-ink2">
+                      {[song.singer_or_band, song.version].filter(Boolean).join(" — ")}
+                      {song.url && (
+                        <>
+                          {(song.singer_or_band || song.version) && " · "}
+                          <a
+                            href={song.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-accent underline"
+                          >
+                            Link
+                          </a>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <EditSongModal serviceId={service.id} song={song} />
+                    <form action={deleteSong.bind(null, service.id, song.id)}>
+                      <button type="submit" className={DANGER_BUTTON}>
+                        Remove
+                      </button>
+                    </form>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+          {emptySlotCount > 0 && (
+            <div className="space-y-2">
+              {Array.from({ length: emptySlotCount }, (_, i) => (
+                <div
+                  key={`empty-${i}`}
+                  className="flex items-center justify-between gap-3 rounded-in border border-dashed border-rule px-3 py-3"
+                >
+                  <span className="font-serif text-base text-ink3 italic">
+                    Empty slot — add a song
                   </span>
+                  <AddSongModal
+                    serviceId={service.id}
+                    triggerLabel="Add"
+                    triggerClassName="inline-flex min-h-11 items-center rounded-btn border border-rule px-3 py-1.5 font-mono text-[11px] font-medium tracking-[0.14em] text-ink uppercase hover:border-rule-strong sm:min-h-0"
+                  />
                 </div>
-                <div className="text-sm text-muted">
-                  {[song.singer_or_band, song.version].filter(Boolean).join(" — ")}
-                  {song.url && (
-                    <>
-                      {(song.singer_or_band || song.version) && " · "}
-                      <a
-                        href={song.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline"
-                      >
-                        Link
-                      </a>
-                    </>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <EditSongModal serviceId={service.id} song={song} />
-                <form action={deleteSong.bind(null, service.id, song.id)}>
-                  <button
-                    type="submit"
-                    className="rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium text-danger hover:border-danger hover:bg-surface"
-                  >
-                    Remove
-                  </button>
-                </form>
-              </div>
-            </li>
-          ))}
-          {Array.from({ length: Math.max(0, 3 - (songs?.length ?? 0)) }, (_, i) => (
-            <li key={`empty-${i}`} className="flex items-center justify-between gap-3 py-3">
-              <span className="text-sm text-muted italic">Empty slot</span>
-              <AddSongModal
-                serviceId={service.id}
-                triggerLabel="Edit"
-                triggerClassName="rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium hover:bg-surface"
-              />
-            </li>
-          ))}
-        </ul>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {(playlists ?? []).length > 0 && (
         <div>
-          <h2 className="mb-2 text-base font-semibold">Playlists</h2>
-          <ul className="divide-y divide-border">
+          <h2 className={SECTION_LABEL}>Playlists</h2>
+          <ul className="divide-y divide-rule">
             {(playlists ?? []).map((playlist) => (
-              <li key={playlist.id} className="flex items-center justify-between gap-3 py-2">
+              <li key={playlist.id} className="flex items-center justify-between gap-3 py-3">
                 <a
                   href={playlist.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="truncate underline"
+                  className="truncate text-ink underline hover:text-accent"
                 >
                   {playlist.url}
                 </a>
                 <form action={deletePlaylist.bind(null, service.id, playlist.id)}>
-                  <button
-                    type="submit"
-                    className="rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium text-danger hover:border-danger hover:bg-surface"
-                  >
+                  <button type="submit" className={DANGER_BUTTON}>
                     Remove
                   </button>
                 </form>
@@ -170,7 +186,7 @@ export default async function ServiceDetailPage({
       )}
 
       <div>
-        <h2 className="mb-2 text-base font-semibold">Lineup</h2>
+        <h2 className={SECTION_LABEL}>Lineup</h2>
         <ServiceLineupTabs
           serviceId={service.id}
           teams={teams ?? []}
