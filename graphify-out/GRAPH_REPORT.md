@@ -1,7 +1,7 @@
 # Graph Report - Music-Team-Volunteer-Lineup  (2026-08-05)
 
 ## Corpus Check
-- 39 files · ~9,776 words
+- 39 files · ~9,775 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `bc285b46`
+- Built from commit: `0d3da2c7`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -35,8 +35,8 @@
 - Boilerplate Icon Asset (window.svg)
 - Project Description (README)
 - ServiceLineupTabs.tsx
-- app/page.tsx
 - server.ts
+- app/page.tsx
 
 ## God Nodes (most connected - your core abstractions)
 1. `createClient()` - 29 edges
@@ -115,7 +115,7 @@ Nodes (10): formatDate(), Home(), todayKey(), formatDate(), ServicesPage(), stat
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `createClient()` connect `actions.ts` to `ServiceLineupTabs.tsx`, `volunteers/page.tsx`, `app/page.tsx`, `server.ts`?**
+- **Why does `createClient()` connect `actions.ts` to `server.ts`, `ServiceLineupTabs.tsx`, `volunteers/page.tsx`, `app/page.tsx`?**
   _High betweenness centrality (0.035) - this node is a cross-community bridge._
 - **Why does `devDependencies` connect `Dev Tooling Dependencies` to `package.json`?**
   _High betweenness centrality (0.026) - this node is a cross-community bridge._

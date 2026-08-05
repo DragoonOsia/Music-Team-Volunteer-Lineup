@@ -200,8 +200,8 @@
     "semantic_hash": ""
   },
   "src/components/NavBar.tsx": {
-    "mtime": 1785941306.8042119,
-    "ast_hash": "21c234127a7c05b2844247b792f7ef25",
+    "mtime": 1785941719.8252409,
+    "ast_hash": "e3906f14fc088d51ccc35178260db690",
     "semantic_hash": ""
   },
   "src/components/ThemeToggle.tsx": {

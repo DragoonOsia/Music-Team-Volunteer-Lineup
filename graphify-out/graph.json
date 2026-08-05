@@ -1539,7 +1539,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_supabase_client",
-      "community": 22,
+      "community": 20,
       "community_name": "server.ts",
       "norm_label": "client.ts"
     },
@@ -1550,7 +1550,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_lib_supabase_client_createclient",
-      "community": 22,
+      "community": 20,
       "community_name": "server.ts",
       "norm_label": "createclient()"
     },
@@ -1561,7 +1561,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_supabase_server",
-      "community": 22,
+      "community": 20,
       "community_name": "server.ts",
       "norm_label": "server.ts"
     },
@@ -1583,7 +1583,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_supabase_types",
-      "community": 22,
+      "community": 20,
       "community_name": "server.ts",
       "norm_label": "types.ts"
     },
@@ -1594,7 +1594,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_supabase_types_database",
-      "community": 22,
+      "community": 20,
       "community_name": "server.ts",
       "norm_label": "database"
     },
@@ -5221,5 +5221,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "bc285b46ec588a2f2678d27cee2c220d55a6a648"
+  "built_at_commit": "0d3da2c753c5f1c96a423f7020747da40607401e"
 }
