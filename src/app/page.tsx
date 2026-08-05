@@ -78,7 +78,7 @@ export default async function Home() {
                   href={playlist.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center rounded-btn border border-rule px-3 py-1.5 font-mono text-[11px] font-medium tracking-[0.14em] text-ink uppercase hover:border-rule-strong sm:min-h-0"
+                  className="inline-flex min-h-11 items-center rounded-btn bg-accent px-3 py-1.5 font-mono text-[11px] font-medium tracking-[0.14em] text-accent-foreground uppercase hover:opacity-90 sm:min-h-0"
                 >
                   Playlist
                 </a>

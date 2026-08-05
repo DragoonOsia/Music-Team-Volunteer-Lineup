@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { deleteService, deleteSong, deletePlaylist, ensureServiceLineupSlots } from "@/lib/actions";
 import AddSongModal from "@/components/AddSongModal";
 import AddPlaylistModal from "@/components/AddPlaylistModal";
+import EditPlaylistModal from "@/components/EditPlaylistModal";
 import ServiceActionsMenu from "@/components/ServiceActionsMenu";
 import ServiceLineupTabs from "@/components/ServiceLineupTabs";
 import EditSongModal from "@/components/EditSongModal";
@@ -81,7 +82,7 @@ export default async function ServiceDetailPage({
       <div className="flex flex-wrap items-center gap-2">
         <AddSongModal serviceId={service.id} />
         <ServiceActionsMenu serviceId={service.id} archived={service.archived} />
-        <AddPlaylistModal serviceId={service.id} />
+        {(playlists ?? []).length === 0 && <AddPlaylistModal serviceId={service.id} />}
       </div>
 
       <div>
@@ -170,15 +171,18 @@ export default async function ServiceDetailPage({
                   href={playlist.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center rounded-btn border border-rule px-3 py-1.5 font-mono text-[11px] font-medium tracking-[0.14em] text-ink uppercase hover:border-rule-strong sm:min-h-0"
+                  className="inline-flex min-h-11 items-center rounded-btn bg-accent px-3 py-1.5 font-mono text-[11px] font-medium tracking-[0.14em] text-accent-foreground uppercase hover:opacity-90 sm:min-h-0"
                 >
                   Playlist
                 </a>
-                <form action={deletePlaylist.bind(null, service.id, playlist.id)}>
-                  <button type="submit" className={DANGER_BUTTON}>
-                    Remove
-                  </button>
-                </form>
+                <div className="flex shrink-0 items-center gap-2">
+                  <EditPlaylistModal serviceId={service.id} playlist={playlist} />
+                  <form action={deletePlaylist.bind(null, service.id, playlist.id)}>
+                    <button type="submit" className={DANGER_BUTTON}>
+                      Remove
+                    </button>
+                  </form>
+                </div>
               </li>
             ))}
           </ul>

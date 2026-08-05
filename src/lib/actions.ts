@@ -280,6 +280,15 @@ export async function addPlaylist(serviceId: string, formData: FormData) {
   revalidatePath(`/services/${serviceId}`);
 }
 
+export async function updatePlaylist(serviceId: string, playlistId: string, formData: FormData) {
+  const url = String(formData.get("url") ?? "").trim();
+  if (!url) return;
+
+  const supabase = await createClient();
+  await supabase.from("playlists").update({ url }).eq("id", playlistId);
+  revalidatePath(`/services/${serviceId}`);
+}
+
 export async function deletePlaylist(serviceId: string, playlistId: string) {
   const supabase = await createClient();
   await supabase.from("playlists").delete().eq("id", playlistId);
