@@ -137,6 +137,7 @@ export type Database = {
           url: string | null;
           key: string | null;
           alt_key: string | null;
+          anchor_id: string | null;
           bpm: number | null;
           time_signature_numerator: number;
           time_signature_denominator: number;
@@ -152,6 +153,7 @@ export type Database = {
           url?: string | null;
           key?: string | null;
           alt_key?: string | null;
+          anchor_id?: string | null;
           bpm?: number | null;
           time_signature_numerator?: number;
           time_signature_denominator?: number;
@@ -167,6 +169,7 @@ export type Database = {
           url?: string | null;
           key?: string | null;
           alt_key?: string | null;
+          anchor_id?: string | null;
           bpm?: number | null;
           time_signature_numerator?: number;
           time_signature_denominator?: number;

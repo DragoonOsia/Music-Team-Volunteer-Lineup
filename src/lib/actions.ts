@@ -213,6 +213,7 @@ export async function addSong(serviceId: string, formData: FormData) {
   const url = String(formData.get("url") ?? "").trim();
   const key = String(formData.get("key") ?? "").trim();
   const altKey = String(formData.get("alt_key") ?? "").trim();
+  const anchorId = String(formData.get("anchor_id") ?? "").trim();
   const bpmRaw = String(formData.get("bpm") ?? "").trim();
   const bpm = bpmRaw ? Number(bpmRaw) : null;
 
@@ -225,6 +226,7 @@ export async function addSong(serviceId: string, formData: FormData) {
     url: url || null,
     key: key || null,
     alt_key: altKey || null,
+    anchor_id: anchorId || null,
     bpm: bpm !== null && !Number.isNaN(bpm) ? bpm : null,
     ...parseTimeSignature(formData),
   });
@@ -244,6 +246,7 @@ export async function updateSong(serviceId: string, songId: string, formData: Fo
   const url = String(formData.get("url") ?? "").trim();
   const key = String(formData.get("key") ?? "").trim();
   const altKey = String(formData.get("alt_key") ?? "").trim();
+  const anchorId = String(formData.get("anchor_id") ?? "").trim();
   const bpmRaw = String(formData.get("bpm") ?? "").trim();
   const bpm = bpmRaw ? Number(bpmRaw) : null;
 
@@ -257,6 +260,7 @@ export async function updateSong(serviceId: string, songId: string, formData: Fo
       url: url || null,
       key: key || null,
       alt_key: altKey || null,
+      anchor_id: anchorId || null,
       bpm: bpm !== null && !Number.isNaN(bpm) ? bpm : null,
       ...parseTimeSignature(formData),
     })

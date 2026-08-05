@@ -45,7 +45,7 @@ export default async function ServiceDetailPage({
     await Promise.all([
       supabase
         .from("songs")
-        .select("id, name, singer_or_band, version, url, key, alt_key, bpm, time_signature_numerator, time_signature_denominator")
+        .select("id, name, singer_or_band, version, url, key, alt_key, anchor_id, bpm, time_signature_numerator, time_signature_denominator")
         .eq("service_id", id)
         .order("sort_order")
         .order("created_at"),
@@ -55,6 +55,18 @@ export default async function ServiceDetailPage({
       supabase.from("volunteers").select("id, name, nickname, instruments").order("name"),
       supabase.from("service_lineup_assignments").select("team_id, role_id, person_id").eq("service_id", id),
     ]);
+
+  // Who's actually singing on this service's lineup right now, across
+  // every team - the pool an "Anchor" (lead vocal) can be picked from.
+  const vocalRoleIds = new Set(
+    (roles ?? []).filter((r) => r.instrument === "Vocals").map((r) => r.id)
+  );
+  const vocalPersonIds = new Set(
+    (assignments ?? [])
+      .filter((a) => vocalRoleIds.has(a.role_id) && a.person_id)
+      .map((a) => a.person_id as string)
+  );
+  const lineupVocalists = (volunteers ?? []).filter((v) => vocalPersonIds.has(v.id));
 
   return (
     <div className="space-y-10">
@@ -80,7 +92,7 @@ export default async function ServiceDetailPage({
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <AddSongModal serviceId={service.id} />
+        <AddSongModal serviceId={service.id} vocalists={lineupVocalists} />
         <ServiceActionsMenu serviceId={service.id} archived={service.archived} />
         <ShareMenu
           dateLabel={formatDate(service.service_date)}
@@ -98,7 +110,12 @@ export default async function ServiceDetailPage({
       <div>
         <h2 className={SECTION_LABEL}>Songs</h2>
         {(songs ?? []).length > 0 ? (
-          <SongList serviceId={service.id} songs={songs ?? []} />
+          <SongList
+            serviceId={service.id}
+            songs={songs ?? []}
+            vocalists={lineupVocalists}
+            volunteers={volunteers ?? []}
+          />
         ) : (
           <p className="py-6 text-center text-sm text-ink3 italic">
             No songs yet. Add one above.

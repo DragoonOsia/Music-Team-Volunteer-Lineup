@@ -6,23 +6,34 @@ import Modal from "@/components/Modal";
 import KeyPicker from "@/components/KeyPicker";
 import BpmStepper from "@/components/BpmStepper";
 import TimeSignatureInput from "@/components/TimeSignatureInput";
+import VolunteerCombobox from "@/components/VolunteerCombobox";
 
 const FIELD_LABEL =
   "mb-1 block font-mono text-[10px] font-medium tracking-[0.18em] text-ink3 uppercase";
 const FIELD_INPUT =
   "w-full rounded-in border border-rule bg-transparent px-3 py-2 text-base sm:text-sm";
 
-export default function AddSongModal({ serviceId }: { serviceId: string }) {
+type Vocalist = { id: string; name: string; nickname: string | null };
+
+export default function AddSongModal({
+  serviceId,
+  vocalists,
+}: {
+  serviceId: string;
+  vocalists: Vocalist[];
+}) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [key, setKey] = useState<string | null>(null);
   const [altKey, setAltKey] = useState<string | null>(null);
+  const [anchorId, setAnchorId] = useState<string | null>(null);
   const [bpm, setBpm] = useState<number | null>(120);
   const [timeSignature, setTimeSignature] = useState({ numerator: 4, denominator: 4 });
 
   function handleSubmit(formData: FormData) {
     if (key) formData.set("key", key);
     if (altKey) formData.set("alt_key", altKey);
+    if (anchorId) formData.set("anchor_id", anchorId);
     if (bpm !== null) formData.set("bpm", String(bpm));
     formData.set("time_signature_numerator", String(timeSignature.numerator));
     formData.set("time_signature_denominator", String(timeSignature.denominator));
@@ -31,6 +42,7 @@ export default function AddSongModal({ serviceId }: { serviceId: string }) {
       setOpen(false);
       setKey(null);
       setAltKey(null);
+      setAnchorId(null);
       setBpm(120);
       setTimeSignature({ numerator: 4, denominator: 4 });
     });
@@ -90,6 +102,10 @@ export default function AddSongModal({ serviceId }: { serviceId: string }) {
               onSelect={(k) => setAltKey(k === altKey ? null : k)}
               disabledValue={key}
             />
+          </div>
+          <div>
+            <span className={FIELD_LABEL}>Anchor</span>
+            <VolunteerCombobox value={anchorId} volunteers={vocalists} onChange={setAnchorId} />
           </div>
           <div>
             <span className={FIELD_LABEL}>BPM</span>

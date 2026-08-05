@@ -84,6 +84,7 @@ alter table songs add column if not exists alt_key text;
 alter table songs add column if not exists bpm integer;
 alter table songs add column if not exists time_signature_numerator integer not null default 4;
 alter table songs add column if not exists time_signature_denominator integer not null default 4;
+alter table songs add column if not exists anchor_id uuid references volunteers(id) on delete set null;
 create index if not exists songs_service_id_idx on songs(service_id);
 
 -- Playlist links for a service
