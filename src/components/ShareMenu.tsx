@@ -269,19 +269,27 @@ async function downloadAsImage(data: ShareData) {
   URL.revokeObjectURL(url);
 }
 
+const ALL_TEAMS = "all";
+
 export default function ShareMenu(props: ShareData) {
   const [open, setOpen] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [scope, setScope] = useState<string>(ALL_TEAMS);
 
   function flashFeedback(message: string) {
     setFeedback(message);
     setTimeout(() => setFeedback(null), 1800);
   }
 
+  function scopedData(): ShareData {
+    if (scope === ALL_TEAMS) return props;
+    return { ...props, teams: props.teams.filter((t) => t.id === scope) };
+  }
+
   async function handleCopyText() {
     setOpen(false);
     try {
-      await navigator.clipboard.writeText(buildShareText(props));
+      await navigator.clipboard.writeText(buildShareText(scopedData()));
       flashFeedback("Copied!");
     } catch {
       flashFeedback("Couldn't copy");
@@ -291,11 +299,18 @@ export default function ShareMenu(props: ShareData) {
   async function handleDownloadImage() {
     setOpen(false);
     try {
-      await downloadAsImage(props);
+      await downloadAsImage(scopedData());
     } catch {
       flashFeedback("Couldn't generate image");
     }
   }
+
+  const scopeOptionClass = (active: boolean) =>
+    `rounded-in border px-2 py-1 font-mono text-[10px] font-medium tracking-[0.1em] uppercase ${
+      active
+        ? "border-accent bg-accent text-accent-foreground"
+        : "border-rule text-ink2 hover:border-rule-strong"
+    }`;
 
   return (
     <div className="relative">
@@ -313,19 +328,45 @@ export default function ShareMenu(props: ShareData) {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 z-50 mt-1 w-52 rounded-lg border border-rule border-t-2 border-t-rule-strong bg-card py-1">
-            <button
-              onClick={handleCopyText}
-              className="flex min-h-11 w-full items-center px-3 py-2 text-left font-mono text-[11px] font-medium tracking-[0.14em] text-ink2 uppercase hover:text-ink sm:min-h-0"
-            >
-              Copy as Text
-            </button>
-            <button
-              onClick={handleDownloadImage}
-              className="flex min-h-11 w-full items-center px-3 py-2 text-left font-mono text-[11px] font-medium tracking-[0.14em] text-ink2 uppercase hover:text-ink sm:min-h-0"
-            >
-              Download as Image
-            </button>
+          <div className="absolute right-0 z-50 mt-1 w-64 rounded-lg border border-rule border-t-2 border-t-rule-strong bg-card py-2">
+            <div className="px-3 pb-2">
+              <p className="mb-1.5 font-mono text-[9px] font-medium tracking-[0.18em] text-ink3 uppercase">
+                Team
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setScope(ALL_TEAMS)}
+                  className={scopeOptionClass(scope === ALL_TEAMS)}
+                >
+                  All Teams
+                </button>
+                {props.teams.map((team) => (
+                  <button
+                    key={team.id}
+                    type="button"
+                    onClick={() => setScope(team.id)}
+                    className={scopeOptionClass(scope === team.id)}
+                  >
+                    {team.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="border-t border-rule pt-1">
+              <button
+                onClick={handleCopyText}
+                className="flex min-h-11 w-full items-center px-3 py-2 text-left font-mono text-[11px] font-medium tracking-[0.14em] text-ink2 uppercase hover:text-ink sm:min-h-0"
+              >
+                Copy as Text
+              </button>
+              <button
+                onClick={handleDownloadImage}
+                className="flex min-h-11 w-full items-center px-3 py-2 text-left font-mono text-[11px] font-medium tracking-[0.14em] text-ink2 uppercase hover:text-ink sm:min-h-0"
+              >
+                Download as Image
+              </button>
+            </div>
           </div>
         </>
       )}
