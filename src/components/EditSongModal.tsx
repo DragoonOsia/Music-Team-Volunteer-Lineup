@@ -118,13 +118,17 @@ export default function EditSongModal({
           </div>
           <div>
             <span className={FIELD_LABEL}>Key</span>
-            <KeyPicker value={key} onSelect={setKey} />
+            <KeyPicker value={key} onSelect={setKey} disabledValue={altKey} />
           </div>
           <div>
             <span className={FIELD_LABEL}>
               Alternate Key <span className="normal-case text-ink3">(optional)</span>
             </span>
-            <KeyPicker value={altKey} onSelect={(k) => setAltKey(k === altKey ? null : k)} />
+            <KeyPicker
+              value={altKey}
+              onSelect={(k) => setAltKey(k === altKey ? null : k)}
+              disabledValue={key}
+            />
           </div>
           <div>
             <span className={FIELD_LABEL}>BPM</span>

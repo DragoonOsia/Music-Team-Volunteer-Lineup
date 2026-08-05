@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Newsreader, IBM_Plex_Mono } from "next/font/google";
 import NavBar from "@/components/NavBar";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -24,15 +25,24 @@ export const metadata: Metadata = {
 // Sets data-theme on <html> before first paint so there's no flash of the
 // wrong mode: a persisted choice in localStorage wins, otherwise the OS
 // preference decides. Runs as a plain blocking script (not next/script) so
-// it executes ahead of hydration.
+// it executes ahead of hydration. Also keeps following the OS setting live
+// (via matchMedia's change event) for as long as the user hasn't explicitly
+// picked Day/Night from the toggle.
 const THEME_INIT_SCRIPT = `
 (function() {
   try {
-    var stored = localStorage.getItem('theme');
-    var theme = stored === 'light' || stored === 'dark'
-      ? stored
-      : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    document.documentElement.setAttribute('data-theme', theme);
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    function apply() {
+      var stored = localStorage.getItem('theme');
+      var theme = stored === 'light' || stored === 'dark'
+        ? stored
+        : (mq.matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+    apply();
+    mq.addEventListener('change', function() {
+      if (!localStorage.getItem('theme')) apply();
+    });
   } catch (e) {}
 })();
 `;
@@ -55,6 +65,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-paper text-ink">
         <NavBar />
         <main className="mx-auto w-full max-w-5xl flex-1 px-8 py-8">{children}</main>
+        <ScrollToTopButton />
       </body>
     </html>
   );

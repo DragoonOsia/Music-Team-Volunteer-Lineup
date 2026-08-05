@@ -524,7 +524,7 @@
       "label": "newsreader",
       "file_type": "code",
       "source_file": "src/app/layout.tsx",
-      "source_location": "L6",
+      "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_layout_newsreader",
       "community": 6,
@@ -535,7 +535,7 @@
       "label": "plexMono",
       "file_type": "code",
       "source_file": "src/app/layout.tsx",
-      "source_location": "L13",
+      "source_location": "L14",
       "_origin": "ast",
       "id": "src_app_layout_plexmono",
       "community": 6,
@@ -546,7 +546,7 @@
       "label": "metadata",
       "file_type": "code",
       "source_file": "src/app/layout.tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "_origin": "ast",
       "id": "src_app_layout_metadata",
       "community": 6,
@@ -557,7 +557,7 @@
       "label": "RootLayout()",
       "file_type": "code",
       "source_file": "src/app/layout.tsx",
-      "source_location": "L40",
+      "source_location": "L50",
       "_origin": "ast",
       "id": "src_app_layout_rootlayout",
       "community": 6,
@@ -736,8 +736,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_addplaylistmodal",
-      "community": 4,
-      "community_name": "volunteers/page.tsx",
+      "community": 1,
+      "community_name": "actions.ts",
       "norm_label": "addplaylistmodal.tsx"
     },
     {
@@ -747,8 +747,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_components_addplaylistmodal_addplaylistmodal",
-      "community": 4,
-      "community_name": "volunteers/page.tsx",
+      "community": 1,
+      "community_name": "actions.ts",
       "norm_label": "addplaylistmodal()"
     },
     {
@@ -758,8 +758,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_addsongmodal",
-      "community": 7,
-      "community_name": "EditSongModal.tsx",
+      "community": 1,
+      "community_name": "actions.ts",
       "norm_label": "addsongmodal.tsx"
     },
     {
@@ -769,8 +769,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_components_addsongmodal_addsongmodal",
-      "community": 7,
-      "community_name": "EditSongModal.tsx",
+      "community": 1,
+      "community_name": "actions.ts",
       "norm_label": "addsongmodal()"
     },
     {
@@ -1071,6 +1071,28 @@
       "norm_label": "readonlylineuptabs()"
     },
     {
+      "label": "ScrollToTopButton.tsx",
+      "file_type": "code",
+      "source_file": "src/components/ScrollToTopButton.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_scrolltotopbutton",
+      "community": 6,
+      "community_name": "layout.tsx",
+      "norm_label": "scrolltotopbutton.tsx"
+    },
+    {
+      "label": "ScrollToTopButton()",
+      "file_type": "code",
+      "source_file": "src/components/ScrollToTopButton.tsx",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "src_components_scrolltotopbutton_scrolltotopbutton",
+      "community": 6,
+      "community_name": "layout.tsx",
+      "norm_label": "scrolltotopbutton()"
+    },
+    {
       "label": "ServiceActionsMenu.tsx",
       "file_type": "code",
       "source_file": "src/components/ServiceActionsMenu.tsx",
@@ -1154,8 +1176,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_components_servicelineuptabs_servicelineuptabs",
-      "community": 1,
-      "community_name": "actions.ts",
+      "community": 19,
+      "community_name": "ServiceLineupTabs.tsx",
       "norm_label": "servicelineuptabs()"
     },
     {
@@ -1352,8 +1374,8 @@
       "source_location": "L94",
       "_origin": "ast",
       "id": "src_lib_actions_addvolunteer",
-      "community": 1,
-      "community_name": "actions.ts",
+      "community": 4,
+      "community_name": "volunteers/page.tsx",
       "norm_label": "addvolunteer()"
     },
     {
@@ -1363,8 +1385,8 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "src_lib_actions_updatevolunteer",
-      "community": 1,
-      "community_name": "actions.ts",
+      "community": 4,
+      "community_name": "volunteers/page.tsx",
       "norm_label": "updatevolunteer()"
     },
     {
@@ -1374,8 +1396,8 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "src_lib_actions_deletevolunteer",
-      "community": 1,
-      "community_name": "actions.ts",
+      "community": 4,
+      "community_name": "volunteers/page.tsx",
       "norm_label": "deletevolunteer()"
     },
     {
@@ -1385,8 +1407,8 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "src_lib_actions_updateservicelineupassignment",
-      "community": 1,
-      "community_name": "actions.ts",
+      "community": 19,
+      "community_name": "ServiceLineupTabs.tsx",
       "norm_label": "updateservicelineupassignment()"
     },
     {
@@ -1583,8 +1605,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tsconfig",
-      "community": 20,
-      "community_name": "include",
+      "community": 0,
+      "community_name": "compilerOptions",
       "norm_label": "tsconfig.json"
     },
     {
@@ -1803,8 +1825,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "tsconfig_include",
-      "community": 20,
-      "community_name": "include",
+      "community": 0,
+      "community_name": "compilerOptions",
       "norm_label": "include"
     },
     {
@@ -1814,8 +1836,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "ref_next_env_d_ts",
-      "community": 20,
-      "community_name": "include",
+      "community": 0,
+      "community_name": "compilerOptions",
       "norm_label": "next-env.d.ts"
     },
     {
@@ -1825,8 +1847,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "ref_ts",
-      "community": 20,
-      "community_name": "include",
+      "community": 0,
+      "community_name": "compilerOptions",
       "norm_label": "**/*.ts"
     },
     {
@@ -1836,8 +1858,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "ref_tsx",
-      "community": 20,
-      "community_name": "include",
+      "community": 0,
+      "community_name": "compilerOptions",
       "norm_label": "**/*.tsx"
     },
     {
@@ -1847,8 +1869,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "ref_next_types_ts",
-      "community": 20,
-      "community_name": "include",
+      "community": 0,
+      "community_name": "compilerOptions",
       "norm_label": ".next/types/**/*.ts"
     },
     {
@@ -1858,8 +1880,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "ref_next_dev_types_ts",
-      "community": 20,
-      "community_name": "include",
+      "community": 0,
+      "community_name": "compilerOptions",
       "norm_label": ".next/dev/types/**/*.ts"
     },
     {
@@ -1869,8 +1891,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "ref_mts",
-      "community": 20,
-      "community_name": "include",
+      "community": 0,
+      "community_name": "compilerOptions",
       "norm_label": "**/*.mts"
     },
     {
@@ -1880,8 +1902,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "tsconfig_exclude",
-      "community": 20,
-      "community_name": "include",
+      "community": 0,
+      "community_name": "compilerOptions",
       "norm_label": "exclude"
     },
     {
@@ -1891,8 +1913,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "ref_node_modules",
-      "community": 20,
-      "community_name": "include",
+      "community": 0,
+      "community_name": "compilerOptions",
       "norm_label": "node_modules"
     },
     {
@@ -2557,7 +2579,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/layout.tsx",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_layout",
@@ -2568,7 +2590,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/layout.tsx",
-      "source_location": "L6",
+      "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_layout",
@@ -2579,7 +2601,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/layout.tsx",
-      "source_location": "L13",
+      "source_location": "L14",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_layout",
@@ -2590,7 +2612,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/layout.tsx",
-      "source_location": "L40",
+      "source_location": "L50",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_layout",
@@ -2607,6 +2629,30 @@
       "_origin": "ast",
       "source": "src_app_layout",
       "target": "src_components_navbar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/layout.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_app_layout",
+      "target": "src_components_scrolltotopbutton",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/layout.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_app_layout",
+      "target": "src_components_scrolltotopbutton_scrolltotopbutton",
       "confidence_score": 1.0
     },
     {
@@ -2731,7 +2777,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/page.tsx",
-      "source_location": "L73",
+      "source_location": "L68",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_page_home",
@@ -2768,7 +2814,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/page.tsx",
-      "source_location": "L55",
+      "source_location": "L52",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_app_page_home",
@@ -3973,6 +4019,17 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/components/ScrollToTopButton.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_scrolltotopbutton",
+      "target": "src_components_scrolltotopbutton_scrolltotopbutton",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/components/ServiceActionsMenu.tsx",
       "source_location": "L7",
       "weight": 1.0,
@@ -5164,5 +5221,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "089d52d7b44d09688f0b6023bf625161b7a6135c"
+  "built_at_commit": "bc285b46ec588a2f2678d27cee2c220d55a6a648"
 }

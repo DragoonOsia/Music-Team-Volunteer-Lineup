@@ -37,9 +37,6 @@ export default async function Home() {
   if (!service) {
     return (
       <div className="space-y-3">
-        <p className="font-mono text-[11px] font-medium tracking-[0.22em] text-accent uppercase">
-          Worship Team
-        </p>
         <h1 className="font-serif text-2xl text-ink">No upcoming service</h1>
         <p className="font-serif text-lg text-ink2 italic">
           Nothing scheduled yet.{" "}
@@ -54,26 +51,39 @@ export default async function Home() {
 
   await ensureServiceLineupSlots(service.id);
 
-  const [{ data: teams }, { data: roles }, { data: volunteers }, { data: assignments }] =
+  const [{ data: teams }, { data: roles }, { data: volunteers }, { data: assignments }, { data: playlists }] =
     await Promise.all([
       supabase.from("teams").select("id, name").order("sort_order"),
       supabase.from("roles").select("id, name").order("sort_order"),
       supabase.from("volunteers").select("id, name, nickname").order("name"),
       supabase.from("service_lineup_assignments").select("team_id, role_id, person_id").eq("service_id", service.id),
+      supabase.from("playlists").select("id, url").eq("service_id", service.id).order("created_at"),
     ]);
 
   return (
     <div className="space-y-10">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="font-mono text-[11px] font-medium tracking-[0.22em] text-accent uppercase">
-            Worship Team
-          </p>
-          <h1 className="mt-2 font-serif text-[40px] leading-[1.05] text-ink sm:text-[52px]">
+          <h1 className="font-serif text-[26px] leading-[1.05] text-ink sm:text-[36px]">
             {formatDate(service.service_date)}
           </h1>
           {service.title && (
             <p className="mt-2 font-serif text-lg text-ink2 italic">{service.title}</p>
+          )}
+          {(playlists ?? []).length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+              {(playlists ?? []).map((playlist) => (
+                <a
+                  key={playlist.id}
+                  href={playlist.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-ink underline hover:text-accent"
+                >
+                  Playlist
+                </a>
+              ))}
+            </div>
           )}
         </div>
         <Link

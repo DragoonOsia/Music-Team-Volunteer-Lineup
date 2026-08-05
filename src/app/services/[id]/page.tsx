@@ -170,9 +170,9 @@ export default async function ServiceDetailPage({
                   href={playlist.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="truncate text-ink underline hover:text-accent"
+                  className="text-ink underline hover:text-accent"
                 >
-                  {playlist.url}
+                  Playlist
                 </a>
                 <form action={deletePlaylist.bind(null, service.id, playlist.id)}>
                   <button type="submit" className={DANGER_BUTTON}>

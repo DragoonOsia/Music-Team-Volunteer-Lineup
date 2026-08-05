@@ -30,18 +30,18 @@
     "semantic_hash": "239f3ebf717465dc636818a1a619398d"
   },
   "src/app/layout.tsx": {
-    "mtime": 1785724326.8698626,
-    "ast_hash": "1791cdd75e47f90a84297f22d1261599",
+    "mtime": 1785941303.5121248,
+    "ast_hash": "03b04fb0bc5788b94401f9309c14c3b8",
     "semantic_hash": ""
   },
   "src/app/page.tsx": {
-    "mtime": 1785828977.719484,
-    "ast_hash": "faa2e703888405f0eafa3aadd7b8758c",
+    "mtime": 1785941329.3615034,
+    "ast_hash": "e36412d416915d2a587710802c056f0e",
     "semantic_hash": ""
   },
   "src/app/services/[id]/page.tsx": {
-    "mtime": 1785940182.3279338,
-    "ast_hash": "9fe33a6884094e2ac41f867aa5c21470",
+    "mtime": 1785941277.8760667,
+    "ast_hash": "3c2e12692cfa2fa488370e615a5e1ba4",
     "semantic_hash": ""
   },
   "src/app/services/new/page.tsx": {
@@ -135,8 +135,8 @@
     "semantic_hash": ""
   },
   "src/components/AddSongModal.tsx": {
-    "mtime": 1785939968.1864848,
-    "ast_hash": "52165f8d8baa7123b5f8185530aeaa1e",
+    "mtime": 1785941255.0391712,
+    "ast_hash": "ae75bf90d8ed5447de57e42521bcae7d",
     "semantic_hash": ""
   },
   "src/components/AddVolunteerModal.tsx": {
@@ -160,8 +160,8 @@
     "semantic_hash": ""
   },
   "src/components/KeyPicker.tsx": {
-    "mtime": 1785940025.8434312,
-    "ast_hash": "4e866ad578ea95403fe185bb8e0bb666",
+    "mtime": 1785941234.5357852,
+    "ast_hash": "aed97acd5ddbf6517a7f9a62d2fcda5d",
     "semantic_hash": ""
   },
   "src/components/VolunteerCombobox.tsx": {
@@ -175,8 +175,8 @@
     "semantic_hash": ""
   },
   "src/components/EditSongModal.tsx": {
-    "mtime": 1785939983.6963058,
-    "ast_hash": "c326af71eb6a1b2deaf0564ad7fdec13",
+    "mtime": 1785941262.5554671,
+    "ast_hash": "b7c62eedd993a3c511480603247e78ba",
     "semantic_hash": ""
   },
   "src/app/archive/page.tsx": {
@@ -200,8 +200,8 @@
     "semantic_hash": ""
   },
   "src/components/NavBar.tsx": {
-    "mtime": 1785828964.794799,
-    "ast_hash": "a8a7603abd66a73deffc008e476f1909",
+    "mtime": 1785941306.8042119,
+    "ast_hash": "21c234127a7c05b2844247b792f7ef25",
     "semantic_hash": ""
   },
   "src/components/ThemeToggle.tsx": {
@@ -217,6 +217,11 @@
   "src/components/Modal.tsx": {
     "mtime": 1785939950.313203,
     "ast_hash": "ecad8a9e69491a5de9fc8779e6feee94",
+    "semantic_hash": ""
+  },
+  "src/components/ScrollToTopButton.tsx": {
+    "mtime": 1785941294.4283288,
+    "ast_hash": "5be1e345d9748c05fc5742511381bafb",
     "semantic_hash": ""
   }
 }

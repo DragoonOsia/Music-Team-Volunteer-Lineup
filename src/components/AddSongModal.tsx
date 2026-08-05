@@ -25,7 +25,7 @@ export default function AddSongModal({
   const [isPending, startTransition] = useTransition();
   const [key, setKey] = useState<string | null>(null);
   const [altKey, setAltKey] = useState<string | null>(null);
-  const [bpm, setBpm] = useState<number | null>(null);
+  const [bpm, setBpm] = useState<number | null>(120);
   const [timeSignature, setTimeSignature] = useState({ numerator: 4, denominator: 4 });
 
   function handleSubmit(formData: FormData) {
@@ -39,7 +39,7 @@ export default function AddSongModal({
       setOpen(false);
       setKey(null);
       setAltKey(null);
-      setBpm(null);
+      setBpm(120);
       setTimeSignature({ numerator: 4, denominator: 4 });
     });
   }
@@ -84,13 +84,17 @@ export default function AddSongModal({
           </div>
           <div>
             <span className={FIELD_LABEL}>Key</span>
-            <KeyPicker value={key} onSelect={setKey} />
+            <KeyPicker value={key} onSelect={setKey} disabledValue={altKey} />
           </div>
           <div>
             <span className={FIELD_LABEL}>
               Alternate Key <span className="normal-case text-ink3">(optional)</span>
             </span>
-            <KeyPicker value={altKey} onSelect={(k) => setAltKey(k === altKey ? null : k)} />
+            <KeyPicker
+              value={altKey}
+              onSelect={(k) => setAltKey(k === altKey ? null : k)}
+              disabledValue={key}
+            />
           </div>
           <div>
             <span className={FIELD_LABEL}>BPM</span>
