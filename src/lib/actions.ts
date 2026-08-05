@@ -264,6 +264,16 @@ export async function updateSong(serviceId: string, songId: string, formData: Fo
   revalidatePath(`/services/${serviceId}`);
 }
 
+export async function reorderSongs(serviceId: string, orderedSongIds: string[]) {
+  const supabase = await createClient();
+  await Promise.all(
+    orderedSongIds.map((songId, index) =>
+      supabase.from("songs").update({ sort_order: index }).eq("id", songId)
+    )
+  );
+  revalidatePath(`/services/${serviceId}`);
+}
+
 // "Reset Lineup" on a service clears its setlist back to empty.
 export async function resetServiceSongs(serviceId: string) {
   const supabase = await createClient();

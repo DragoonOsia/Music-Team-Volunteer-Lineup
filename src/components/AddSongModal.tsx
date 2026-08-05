@@ -12,15 +12,7 @@ const FIELD_LABEL =
 const FIELD_INPUT =
   "w-full rounded-in border border-rule bg-transparent px-3 py-2 text-base sm:text-sm";
 
-export default function AddSongModal({
-  serviceId,
-  triggerLabel = "Add Song",
-  triggerClassName = "inline-flex min-h-11 items-center rounded-btn bg-accent px-4 py-2 font-mono text-xs font-medium tracking-[0.14em] text-accent-foreground uppercase hover:opacity-90 sm:min-h-0",
-}: {
-  serviceId: string;
-  triggerLabel?: string;
-  triggerClassName?: string;
-}) {
+export default function AddSongModal({ serviceId }: { serviceId: string }) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [key, setKey] = useState<string | null>(null);
@@ -46,8 +38,11 @@ export default function AddSongModal({
 
   return (
     <>
-      <button onClick={() => setOpen(true)} className={triggerClassName}>
-        {triggerLabel}
+      <button
+        onClick={() => setOpen(true)}
+        className="inline-flex min-h-11 items-center rounded-btn bg-accent px-4 py-2 font-mono text-xs font-medium tracking-[0.14em] text-accent-foreground uppercase hover:opacity-90 sm:min-h-0"
+      >
+        Add Song
       </button>
 
       <Modal open={open} onClose={() => setOpen(false)} title="Add Song">

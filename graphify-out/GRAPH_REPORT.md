@@ -1,16 +1,16 @@
 # Graph Report - Music-Team-Volunteer-Lineup  (2026-08-05)
 
 ## Corpus Check
-- 40 files · ~10,043 words
+- 41 files · ~10,350 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 186 nodes · 284 edges · 22 communities (11 shown, 11 thin omitted)
+- 190 nodes · 291 edges · 22 communities (11 shown, 11 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f7a25ca6`
+- Built from commit: `011e009b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -39,7 +39,7 @@
 - app/page.tsx
 
 ## God Nodes (most connected - your core abstractions)
-1. `createClient()` - 30 edges
+1. `createClient()` - 31 edges
 2. `compilerOptions` - 16 edges
 3. `Home()` - 7 edges
 4. `Modal()` - 7 edges
@@ -72,8 +72,8 @@ Cohesion: 0.11
 Nodes (19): dom, dom.iterable, esnext, compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules (+11 more)
 
 ### Community 1 - "actions.ts"
-Cohesion: 0.15
-Nodes (22): ArchivePage(), formatDate(), formatDate(), ServiceDetailPage(), AddPlaylistModal(), EditPlaylistModal(), ServiceActionsMenu(), addPlaylist() (+14 more)
+Cohesion: 0.13
+Nodes (24): ArchivePage(), formatDate(), formatDate(), ServiceDetailPage(), AddPlaylistModal(), EditPlaylistModal(), ServiceActionsMenu(), Song (+16 more)
 
 ### Community 2 - "Dev Tooling Dependencies"
 Cohesion: 0.12
@@ -112,7 +112,7 @@ Cohesion: 0.21
 Nodes (11): formatDate(), Home(), todayKey(), formatDate(), ServicesPage(), statusFor(), archivePastServices(), ensureUpcomingSundays() (+3 more)
 
 ## Knowledge Gaps
-- **74 isolated node(s):** `eslintConfig`, `nextConfig`, `name`, `version`, `private` (+69 more)
+- **75 isolated node(s):** `eslintConfig`, `nextConfig`, `name`, `version`, `private` (+70 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -122,14 +122,14 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `createClient()` connect `actions.ts` to `ServiceLineupTabs.tsx`, `volunteers/page.tsx`, `app/page.tsx`?**
   _High betweenness centrality (0.037) - this node is a cross-community bridge._
 - **Why does `devDependencies` connect `Dev Tooling Dependencies` to `package.json`?**
-  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+  _High betweenness centrality (0.024) - this node is a cross-community bridge._
 - **Why does `compilerOptions` connect `compilerOptions` to `include`?**
-  _High betweenness centrality (0.019) - this node is a cross-community bridge._
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
 - **What connects `eslintConfig`, `nextConfig`, `name` to the rest of the system?**
-  _74 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _75 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `compilerOptions` be split into smaller, more focused modules?**
   _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
+- **Should `actions.ts` be split into smaller, more focused modules?**
+  _Cohesion score 0.1319073083778966 - nodes in this community are weakly interconnected._
 - **Should `Dev Tooling Dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
-- **Should `package.json` be split into smaller, more focused modules?**
-  _Cohesion score 0.1 - nodes in this community are weakly interconnected._
