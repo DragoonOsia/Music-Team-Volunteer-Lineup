@@ -8,6 +8,7 @@ type Song = {
   version: string | null;
   key: string | null;
   alt_key: string | null;
+  anchor_id: string | null;
   bpm: number | null;
   time_signature_numerator: number;
   time_signature_denominator: number;
@@ -41,6 +42,12 @@ function assignedName(
   return volunteer ? volunteer.nickname || volunteer.name : "Open";
 }
 
+function anchorName(data: ShareData, song: Song): string | null {
+  if (!song.anchor_id) return null;
+  const v = data.volunteers.find((v) => v.id === song.anchor_id);
+  return v ? v.nickname || v.name : null;
+}
+
 function songMeta(song: Song): string {
   const keyPart = [song.key, song.alt_key].filter(Boolean).join("/");
   return [
@@ -60,7 +67,9 @@ function buildShareText(data: ShareData): string {
     lines.push("", "SETLIST");
     data.songs.forEach((song, i) => {
       const meta = songMeta(song);
+      const anchor = anchorName(data, song);
       lines.push(`${i + 1}. ${song.name}${meta ? ` (${meta})` : ""}`);
+      if (anchor) lines.push(`   ⚓ ANCHOR: ${anchor}`);
       const sub = [song.singer_or_band, song.version].filter(Boolean).join(" — ");
       if (sub) lines.push(`   ${sub}`);
     });
@@ -96,6 +105,7 @@ type DrawLine =
   | { kind: "subtitle"; text: string }
   | { kind: "section"; text: string }
   | { kind: "song"; text: string }
+  | { kind: "songAnchor"; text: string }
   | { kind: "songSub"; text: string }
   | { kind: "role"; label: string; value: string }
   | { kind: "spacer" };
@@ -106,6 +116,7 @@ const LINE_HEIGHT: Record<DrawLine["kind"], number> = {
   subtitle: 28,
   section: 34,
   song: 26,
+  songAnchor: 22,
   songSub: 22,
   role: 26,
   spacer: 14,
@@ -146,7 +157,9 @@ async function downloadAsImage(data: ShareData) {
     plan.push({ kind: "spacer" }, { kind: "section", text: "SETLIST" });
     data.songs.forEach((song, i) => {
       const meta = songMeta(song);
+      const anchor = anchorName(data, song);
       plan.push({ kind: "song", text: `${i + 1}. ${song.name}${meta ? `  (${meta})` : ""}` });
+      if (anchor) plan.push({ kind: "songAnchor", text: `⚓ ANCHOR: ${anchor}` });
       const sub = [song.singer_or_band, song.version].filter(Boolean).join(" — ");
       if (sub) plan.push({ kind: "songSub", text: sub });
     });
@@ -232,6 +245,12 @@ async function downloadAsImage(data: ShareData) {
         ctx.fillStyle = INK;
         ctx.fillText(line.text, paddingX, y);
         y += LINE_HEIGHT.song;
+        break;
+      case "songAnchor":
+        ctx.font = '600 13px "IBM Plex Mono"';
+        ctx.fillStyle = ACCENT;
+        ctx.fillText(line.text, paddingX + 16, y);
+        y += LINE_HEIGHT.songAnchor;
         break;
       case "songSub":
         ctx.font = '400 14px "Newsreader"';

@@ -124,6 +124,14 @@ export default function SongList({
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-[20px] text-ink">{song.name}</span>
+                  {anchor && (
+                    <span className="inline-flex items-center gap-1.5 rounded-in border border-accent bg-accent px-2 py-0.5 text-accent-foreground">
+                      <span className="font-mono text-[10px] font-semibold tracking-[0.08em] uppercase">
+                        Anchor
+                      </span>
+                      <span className="text-xs font-medium">{displayName(anchor)}</span>
+                    </span>
+                  )}
                   {(song.key || song.alt_key) && (
                     <span className="rounded-in border border-rule bg-card px-1.5 py-0.5 font-mono text-xs font-semibold text-ink">
                       {[song.key, song.alt_key].filter(Boolean).join(" / ")}
@@ -135,11 +143,6 @@ export default function SongList({
                   <span className="font-mono text-xs text-ink3">
                     {song.time_signature_numerator}/{song.time_signature_denominator}
                   </span>
-                  {anchor && (
-                    <span className="font-mono text-xs text-ink3">
-                      Anchor: {displayName(anchor)}
-                    </span>
-                  )}
                 </div>
                 <div className="mt-0.5 text-sm text-ink2">
                   {[song.singer_or_band, song.version].filter(Boolean).join(" — ")}
