@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "src/app/services/[id]/page.tsx": {
-    "mtime": 1785942189.8603282,
-    "ast_hash": "0334d948265d88ce4c7f006c87baa373",
+    "mtime": 1785942640.3742585,
+    "ast_hash": "ca643825c720ed86735adda4c46f7b46",
     "semantic_hash": ""
   },
   "src/app/services/new/page.tsx": {
@@ -50,8 +50,8 @@
     "semantic_hash": ""
   },
   "src/lib/actions.ts": {
-    "mtime": 1785942157.7138093,
-    "ast_hash": "152dd4b3215ace369670d447d843552c",
+    "mtime": 1785942587.1218622,
+    "ast_hash": "3743682e7d814e24dc95735ddaf079ec",
     "semantic_hash": ""
   },
   "src/lib/supabase/client.ts": {
@@ -135,8 +135,8 @@
     "semantic_hash": ""
   },
   "src/components/AddSongModal.tsx": {
-    "mtime": 1785941255.0391712,
-    "ast_hash": "ae75bf90d8ed5447de57e42521bcae7d",
+    "mtime": 1785942656.5902467,
+    "ast_hash": "9c9221d91318b97ae18c6cf92e7027d1",
     "semantic_hash": ""
   },
   "src/components/AddVolunteerModal.tsx": {
@@ -227,6 +227,11 @@
   "src/components/EditPlaylistModal.tsx": {
     "mtime": 1785942169.5342958,
     "ast_hash": "073c8ace0ea304c8b9903c19d2ca082c",
+    "semantic_hash": ""
+  },
+  "src/components/SongList.tsx": {
+    "mtime": 1785942604.482677,
+    "ast_hash": "e6e7e90b2cadb320876964fcdebb3cb2",
     "semantic_hash": ""
   }
 }

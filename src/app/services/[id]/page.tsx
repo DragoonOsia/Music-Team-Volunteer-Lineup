@@ -7,6 +7,7 @@ import EditPlaylistModal from "@/components/EditPlaylistModal";
 import ServiceActionsMenu from "@/components/ServiceActionsMenu";
 import ServiceLineupTabs from "@/components/ServiceLineupTabs";
 import SongList from "@/components/SongList";
+import ShareMenu from "@/components/ShareMenu";
 
 const SECTION_LABEL =
   "mb-3 border-b-2 border-rule-strong pb-2 font-mono text-[11px] font-medium tracking-[0.2em] text-ink3 uppercase";
@@ -81,6 +82,16 @@ export default async function ServiceDetailPage({
       <div className="flex flex-wrap items-center gap-2">
         <AddSongModal serviceId={service.id} />
         <ServiceActionsMenu serviceId={service.id} archived={service.archived} />
+        <ShareMenu
+          dateLabel={formatDate(service.service_date)}
+          title={service.title}
+          songs={songs ?? []}
+          playlists={playlists ?? []}
+          teams={teams ?? []}
+          roles={roles ?? []}
+          volunteers={volunteers ?? []}
+          assignments={assignments ?? []}
+        />
         {(playlists ?? []).length === 0 && <AddPlaylistModal serviceId={service.id} />}
       </div>
 
