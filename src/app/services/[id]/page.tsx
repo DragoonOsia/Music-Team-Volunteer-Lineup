@@ -38,7 +38,7 @@ export default async function ServiceDetailPage({
     await Promise.all([
       supabase
         .from("songs")
-        .select("id, name, singer_or_band, version, url, key, bpm, time_signature_numerator, time_signature_denominator")
+        .select("id, name, singer_or_band, version, url, key, alt_key, bpm, time_signature_numerator, time_signature_denominator")
         .eq("service_id", id)
         .order("created_at"),
       supabase.from("playlists").select("id, url").eq("service_id", id).order("created_at"),
@@ -86,9 +86,9 @@ export default async function ServiceDetailPage({
               <div>
                 <div className="flex items-center gap-2 font-medium">
                   {song.name}
-                  {song.key && (
-                    <span className="rounded bg-surface px-1.5 py-0.5 text-xs font-medium">
-                      {song.key}
+                  {(song.key || song.alt_key) && (
+                    <span className="rounded-in border border-rule bg-card px-1.5 py-0.5 font-mono text-xs font-medium text-ink">
+                      {[song.key, song.alt_key].filter(Boolean).join(" / ")}
                     </span>
                   )}
                   {song.bpm !== null && (

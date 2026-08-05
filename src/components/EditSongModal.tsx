@@ -13,6 +13,7 @@ type Song = {
   version: string | null;
   url: string | null;
   key: string | null;
+  alt_key: string | null;
   bpm: number | null;
   time_signature_numerator: number;
   time_signature_denominator: number;
@@ -28,6 +29,7 @@ export default function EditSongModal({
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [key, setKey] = useState<string | null>(song.key);
+  const [altKey, setAltKey] = useState<string | null>(song.alt_key);
   const [bpm, setBpm] = useState<number | null>(song.bpm);
   const [timeSignature, setTimeSignature] = useState({
     numerator: song.time_signature_numerator,
@@ -36,6 +38,7 @@ export default function EditSongModal({
 
   function handleSubmit(formData: FormData) {
     if (key) formData.set("key", key);
+    if (altKey) formData.set("alt_key", altKey);
     if (bpm !== null) formData.set("bpm", String(bpm));
     formData.set("time_signature_numerator", String(timeSignature.numerator));
     formData.set("time_signature_denominator", String(timeSignature.denominator));
@@ -119,6 +122,12 @@ export default function EditSongModal({
               <div>
                 <span className="mb-1 block text-sm font-medium">Key</span>
                 <KeyPicker value={key} onSelect={setKey} />
+              </div>
+              <div>
+                <span className="mb-1 block text-sm font-medium">
+                  Alternate Key <span className="text-ink3">(optional)</span>
+                </span>
+                <KeyPicker value={altKey} onSelect={(k) => setAltKey(k === altKey ? null : k)} />
               </div>
               <div>
                 <span className="mb-1 block text-sm font-medium">BPM</span>

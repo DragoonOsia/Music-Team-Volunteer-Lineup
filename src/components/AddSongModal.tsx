@@ -18,11 +18,13 @@ export default function AddSongModal({
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [key, setKey] = useState<string | null>(null);
+  const [altKey, setAltKey] = useState<string | null>(null);
   const [bpm, setBpm] = useState<number | null>(null);
   const [timeSignature, setTimeSignature] = useState({ numerator: 4, denominator: 4 });
 
   function handleSubmit(formData: FormData) {
     if (key) formData.set("key", key);
+    if (altKey) formData.set("alt_key", altKey);
     if (bpm !== null) formData.set("bpm", String(bpm));
     formData.set("time_signature_numerator", String(timeSignature.numerator));
     formData.set("time_signature_denominator", String(timeSignature.denominator));
@@ -30,6 +32,7 @@ export default function AddSongModal({
       await addSong(serviceId, formData);
       setOpen(false);
       setKey(null);
+      setAltKey(null);
       setBpm(null);
       setTimeSignature({ numerator: 4, denominator: 4 });
     });
@@ -101,6 +104,12 @@ export default function AddSongModal({
               <div>
                 <span className="mb-1 block text-sm font-medium">Key</span>
                 <KeyPicker value={key} onSelect={setKey} />
+              </div>
+              <div>
+                <span className="mb-1 block text-sm font-medium">
+                  Alternate Key <span className="text-ink3">(optional)</span>
+                </span>
+                <KeyPicker value={altKey} onSelect={(k) => setAltKey(k === altKey ? null : k)} />
               </div>
               <div>
                 <span className="mb-1 block text-sm font-medium">BPM</span>

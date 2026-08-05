@@ -80,6 +80,7 @@ create table if not exists songs (
   created_at timestamptz not null default now()
 );
 alter table songs add column if not exists key text;
+alter table songs add column if not exists alt_key text;
 alter table songs add column if not exists bpm integer;
 alter table songs add column if not exists time_signature_numerator integer not null default 4;
 alter table songs add column if not exists time_signature_denominator integer not null default 4;
