@@ -49,29 +49,39 @@ export default function ReadOnlyLineupTabs({
         ))}
       </div>
 
-      <div className="divide-y divide-rule">
-        {roles.map((role) => {
-          const personId = assignmentByRole.get(role.id) ?? null;
-          const volunteer = volunteers.find((v) => v.id === personId);
-          const name = displayName(volunteer);
-          return (
-            <div key={role.id} className="flex items-baseline gap-3 py-3">
-              <span className="shrink-0 font-mono text-[10px] font-medium tracking-[0.18em] text-ink3 uppercase">
-                {role.name}
-              </span>
-              <span className="flex-1 translate-y-[-4px] border-b border-dotted border-rule" />
-              <span className="text-[19px] text-ink">
-                {name ?? <em className="text-[17px] text-ink3 italic">Open</em>}
-              </span>
-            </div>
-          );
-        })}
-        {roles.length === 0 && (
-          <p className="py-6 text-center text-sm text-ink3 italic">
-            No roles set up yet.
-          </p>
-        )}
-      </div>
+      {roles.length > 0 ? (
+        <div className="flex flex-col gap-x-10 sm:flex-row">
+          {[roles.slice(0, Math.ceil(roles.length / 2)), roles.slice(Math.ceil(roles.length / 2))].map(
+            (column, i) => (
+              <div key={i} className="flex-1">
+                {column.map((role) => {
+                  const personId = assignmentByRole.get(role.id) ?? null;
+                  const volunteer = volunteers.find((v) => v.id === personId);
+                  const name = displayName(volunteer);
+                  return (
+                    <div
+                      key={role.id}
+                      className="flex items-baseline gap-3 border-b border-rule py-3"
+                    >
+                      <span className="shrink-0 font-mono text-[10px] font-medium tracking-[0.18em] text-ink3 uppercase">
+                        {role.name}
+                      </span>
+                      <span className="flex-1 translate-y-[-4px] border-b border-dotted border-rule" />
+                      <span className="text-[19px] text-ink">
+                        {name ?? <em className="text-[17px] text-ink3 italic">Open</em>}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )
+          )}
+        </div>
+      ) : (
+        <p className="py-6 text-center text-sm text-ink3 italic">
+          No roles set up yet.
+        </p>
+      )}
     </div>
   );
 }

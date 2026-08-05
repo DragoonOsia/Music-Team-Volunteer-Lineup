@@ -3,6 +3,9 @@ import { createClient } from "@/lib/supabase/server";
 import { ensureUpcomingSundays, ensureServiceLineupSlots, archivePastServices } from "@/lib/actions";
 import ReadOnlyLineupTabs from "@/components/ReadOnlyLineupTabs";
 
+const SECTION_LABEL =
+  "mb-3 border-b-2 border-rule-strong pb-2 font-mono text-[11px] font-medium tracking-[0.2em] text-ink3 uppercase";
+
 function formatDate(dateStr: string) {
   return new Date(`${dateStr}T00:00:00`).toLocaleDateString(undefined, {
     weekday: "long",
@@ -51,13 +54,19 @@ export default async function Home() {
 
   await ensureServiceLineupSlots(service.id);
 
-  const [{ data: teams }, { data: roles }, { data: volunteers }, { data: assignments }, { data: playlists }] =
+  const [{ data: teams }, { data: roles }, { data: volunteers }, { data: assignments }, { data: playlists }, { data: songs }] =
     await Promise.all([
       supabase.from("teams").select("id, name").order("sort_order"),
       supabase.from("roles").select("id, name").order("sort_order"),
       supabase.from("volunteers").select("id, name, nickname").order("name"),
       supabase.from("service_lineup_assignments").select("team_id, role_id, person_id").eq("service_id", service.id),
       supabase.from("playlists").select("id, url").eq("service_id", service.id).order("created_at"),
+      supabase
+        .from("songs")
+        .select("id, name, singer_or_band, version, key, alt_key, anchor_id, bpm, time_signature_numerator, time_signature_denominator")
+        .eq("service_id", service.id)
+        .order("sort_order")
+        .order("created_at"),
     ]);
 
   return (
@@ -94,12 +103,59 @@ export default async function Home() {
         </Link>
       </div>
 
-      <ReadOnlyLineupTabs
-        teams={teams ?? []}
-        roles={roles ?? []}
-        volunteers={volunteers ?? []}
-        assignments={assignments ?? []}
-      />
+      {(songs ?? []).length > 0 && (
+        <div>
+          <h2 className={SECTION_LABEL}>Songs</h2>
+          <ul className="divide-y divide-rule">
+            {(songs ?? []).map((song) => {
+              const anchor = (volunteers ?? []).find((v) => v.id === song.anchor_id);
+              return (
+                <li key={song.id} className="py-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-[20px] text-ink">{song.name}</span>
+                    {anchor && (
+                      <span className="inline-flex items-center gap-1.5 rounded-in border border-accent bg-accent px-2 py-0.5 text-accent-foreground">
+                        <span className="font-mono text-[10px] font-semibold tracking-[0.08em] uppercase">
+                          Anchor
+                        </span>
+                        <span className="text-xs font-medium">
+                          {anchor.nickname || anchor.name}
+                        </span>
+                      </span>
+                    )}
+                    {(song.key || song.alt_key) && (
+                      <span className="rounded-in border border-rule bg-card px-1.5 py-0.5 font-mono text-xs font-semibold text-ink">
+                        {[song.key, song.alt_key].filter(Boolean).join(" / ")}
+                      </span>
+                    )}
+                    {song.bpm !== null && (
+                      <span className="font-mono text-xs text-ink3">{song.bpm} BPM</span>
+                    )}
+                    <span className="font-mono text-xs text-ink3">
+                      {song.time_signature_numerator}/{song.time_signature_denominator}
+                    </span>
+                  </div>
+                  {(song.singer_or_band || song.version) && (
+                    <div className="mt-0.5 text-sm text-ink2">
+                      {[song.singer_or_band, song.version].filter(Boolean).join(" — ")}
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
+      <div>
+        <h2 className={SECTION_LABEL}>Lineup</h2>
+        <ReadOnlyLineupTabs
+          teams={teams ?? []}
+          roles={roles ?? []}
+          volunteers={volunteers ?? []}
+          assignments={assignments ?? []}
+        />
+      </div>
     </div>
   );
 }

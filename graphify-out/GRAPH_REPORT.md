@@ -1,7 +1,7 @@
 # Graph Report - Music-Team-Volunteer-Lineup  (2026-08-06)
 
 ## Corpus Check
-- 42 files · ~12,066 words
+- 42 files · ~12,261 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a27581c5`
+- Built from commit: `d9b30b60`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
