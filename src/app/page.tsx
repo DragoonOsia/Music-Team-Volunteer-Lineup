@@ -71,14 +71,14 @@ export default async function Home() {
             <p className="mt-2 font-serif text-lg text-ink2 italic">{service.title}</p>
           )}
           {(playlists ?? []).length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+            <div className="mt-2 flex flex-wrap gap-2">
               {(playlists ?? []).map((playlist) => (
                 <a
                   key={playlist.id}
                   href={playlist.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-ink underline hover:text-accent"
+                  className="inline-flex min-h-11 items-center rounded-btn border border-rule px-3 py-1.5 font-mono text-[11px] font-medium tracking-[0.14em] text-ink uppercase hover:border-rule-strong sm:min-h-0"
                 >
                   Playlist
                 </a>
