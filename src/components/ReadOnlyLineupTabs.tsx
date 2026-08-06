@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 type Team = { id: string; name: string };
-type Role = { id: string; name: string };
+type Role = { id: string; name: string; team_id: string | null };
 type Volunteer = { id: string; name: string; nickname: string | null };
 type Assignment = { team_id: string; role_id: string; person_id: string | null };
 
@@ -11,6 +11,8 @@ function displayName(v: Volunteer | undefined) {
   if (!v) return null;
   return v.nickname || v.name;
 }
+
+const LEFT_COLUMN_ROLES = new Set(["Musical Director", "Vocals 1", "Vocals 2", "Vocals 3"]);
 
 export default function ReadOnlyLineupTabs({
   teams,
@@ -24,6 +26,12 @@ export default function ReadOnlyLineupTabs({
   assignments: Assignment[];
 }) {
   const [activeTeamId, setActiveTeamId] = useState(teams[0]?.id ?? "");
+
+  // A role with a team_id only belongs to that one team; a null team_id
+  // (the original design) belongs to every team.
+  const visibleRoles = roles.filter(
+    (r) => r.team_id === null || r.team_id === activeTeamId
+  );
 
   const assignmentByRole = new Map(
     assignments
@@ -49,33 +57,34 @@ export default function ReadOnlyLineupTabs({
         ))}
       </div>
 
-      {roles.length > 0 ? (
+      {visibleRoles.length > 0 ? (
         <div className="flex flex-col gap-x-10 sm:flex-row">
-          {[roles.slice(0, Math.ceil(roles.length / 2)), roles.slice(Math.ceil(roles.length / 2))].map(
-            (column, i) => (
-              <div key={i} className="flex-1">
-                {column.map((role) => {
-                  const personId = assignmentByRole.get(role.id) ?? null;
-                  const volunteer = volunteers.find((v) => v.id === personId);
-                  const name = displayName(volunteer);
-                  return (
-                    <div
-                      key={role.id}
-                      className="flex items-baseline gap-3 border-b border-rule py-3"
-                    >
-                      <span className="shrink-0 font-mono text-[10px] font-medium tracking-[0.18em] text-ink3 uppercase">
-                        {role.name}
-                      </span>
-                      <span className="flex-1 translate-y-[-4px] border-b border-dotted border-rule" />
-                      <span className="text-[19px] text-ink">
-                        {name ?? <em className="text-[17px] text-ink3 italic">Open</em>}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            )
-          )}
+          {[
+            visibleRoles.filter((r) => LEFT_COLUMN_ROLES.has(r.name)),
+            visibleRoles.filter((r) => !LEFT_COLUMN_ROLES.has(r.name)),
+          ].map((column, i) => (
+            <div key={i} className="flex-1">
+              {column.map((role) => {
+                const personId = assignmentByRole.get(role.id) ?? null;
+                const volunteer = volunteers.find((v) => v.id === personId);
+                const name = displayName(volunteer);
+                return (
+                  <div
+                    key={role.id}
+                    className="flex items-baseline gap-3 border-b border-rule py-3"
+                  >
+                    <span className="shrink-0 font-mono text-[10px] font-medium tracking-[0.18em] text-ink3 uppercase">
+                      {role.name}
+                    </span>
+                    <span className="flex-1 translate-y-[-4px] border-b border-dotted border-rule" />
+                    <span className="text-[19px] text-ink">
+                      {name ?? <em className="text-[17px] text-ink3 italic">Open</em>}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
         </div>
       ) : (
         <p className="py-6 text-center text-sm text-ink3 italic">

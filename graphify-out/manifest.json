@@ -35,13 +35,13 @@
     "semantic_hash": ""
   },
   "src/app/page.tsx": {
-    "mtime": 1785969118.85436,
-    "ast_hash": "21dcc7266a7c3822ff7c69b9a61fd1b2",
+    "mtime": 1785985986.5745876,
+    "ast_hash": "377e21e1e2933c82bb44f32c58d4d3a4",
     "semantic_hash": ""
   },
   "src/app/services/[id]/page.tsx": {
-    "mtime": 1785966154.7388134,
-    "ast_hash": "4657bb324c1836539d951ef3a1f2a949",
+    "mtime": 1785985991.7369342,
+    "ast_hash": "0c01ef82aa21e007ef684f8c51f6a9b1",
     "semantic_hash": ""
   },
   "src/app/services/new/page.tsx": {
@@ -50,8 +50,8 @@
     "semantic_hash": ""
   },
   "src/lib/actions.ts": {
-    "mtime": 1785965990.6445048,
-    "ast_hash": "00021f0e325ec86aae90e9128ec94aa4",
+    "mtime": 1785985977.2708004,
+    "ast_hash": "5d0d1357b4bb43e57e60d8d0bca019d7",
     "semantic_hash": ""
   },
   "src/lib/supabase/client.ts": {
@@ -65,13 +65,13 @@
     "semantic_hash": "993f0b7dd0c54e2711e5bc9c3c8e9250"
   },
   "src/lib/supabase/types.ts": {
-    "mtime": 1785966002.0223987,
-    "ast_hash": "6263617af889edf00986d1b389563dc7",
+    "mtime": 1785986164.241249,
+    "ast_hash": "80dce7df8893cf64ae71bc2fd5b80bf3",
     "semantic_hash": ""
   },
   "supabase/schema.sql": {
-    "mtime": 1785965975.845184,
-    "ast_hash": "3cc326198f70d13a56ee37cff0c69038",
+    "mtime": 1785985960.5844114,
+    "ast_hash": "cf72f505cbc12e29d1a9e4cc0b0cf5f8",
     "semantic_hash": ""
   },
   "tsconfig.json": {
@@ -145,13 +145,13 @@
     "semantic_hash": ""
   },
   "src/components/ServiceActionsMenu.tsx": {
-    "mtime": 1785940127.1961296,
-    "ast_hash": "27bc879122c5cc1eb245dc4c615a7214",
+    "mtime": 1785986027.433386,
+    "ast_hash": "2ee2e15911c4a9fa0b567b9072839a69",
     "semantic_hash": ""
   },
   "src/components/ServiceLineupTabs.tsx": {
-    "mtime": 1785940114.6898217,
-    "ast_hash": "e9ffe8321527fc996c0a0671b62f9f10",
+    "mtime": 1785986061.070196,
+    "ast_hash": "2ebfe647ee75782b1e56259a26103bf2",
     "semantic_hash": ""
   },
   "src/components/BpmStepper.tsx": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "src/components/ReadOnlyLineupTabs.tsx": {
-    "mtime": 1785969590.708053,
-    "ast_hash": "070468587aac77f80c6da0111252eea8",
+    "mtime": 1785986085.1940353,
+    "ast_hash": "27044ecb15cb29b1dffca784191996af",
     "semantic_hash": ""
   },
   "src/components/NavBar.tsx": {
@@ -235,8 +235,13 @@
     "semantic_hash": ""
   },
   "src/components/ShareMenu.tsx": {
-    "mtime": 1785968376.5944333,
-    "ast_hash": "560f8be48309cde713ff17bb3b82ec1f",
+    "mtime": 1785986111.2002983,
+    "ast_hash": "484725d18f12509249f149e6ac7f7cd3",
+    "semantic_hash": ""
+  },
+  "src/components/AddRoleModal.tsx": {
+    "mtime": 1785986003.7755458,
+    "ast_hash": "10b8948ca1edfd093c152edf2e62587a",
     "semantic_hash": ""
   }
 }

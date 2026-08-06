@@ -53,12 +53,14 @@ export async function archivePastServices() {
 }
 
 // Every service needs a (possibly unassigned) slot for every AM Team / PM Team role.
+// A role with a team_id only gets a slot on that one team; a role with a
+// null team_id (the original design) still gets a slot on every team.
 // Assignments are per-service - nothing here is shared with any other service.
 export async function ensureServiceLineupSlots(serviceId: string) {
   const supabase = await createClient();
   const [{ data: teams }, { data: roles }, { data: existing }] = await Promise.all([
     supabase.from("teams").select("id"),
-    supabase.from("roles").select("id"),
+    supabase.from("roles").select("id, team_id"),
     supabase
       .from("service_lineup_assignments")
       .select("team_id, role_id")
@@ -72,6 +74,7 @@ export async function ensureServiceLineupSlots(serviceId: string) {
 
   const missing = teams.flatMap((team) =>
     roles
+      .filter((role) => role.team_id === null || role.team_id === team.id)
       .filter((role) => !existingKeys.has(`${team.id}_${role.id}`))
       .map((role) => ({ service_id: serviceId, team_id: team.id, role_id: role.id }))
   );
@@ -79,6 +82,58 @@ export async function ensureServiceLineupSlots(serviceId: string) {
   if (missing.length > 0) {
     await supabase.from("service_lineup_assignments").insert(missing);
   }
+}
+
+const INSTRUMENTS_FOR_ROLES = [
+  "Musical Director",
+  "Vocals",
+  "Acoustic Guitar",
+  "Electric Guitar",
+  "Keyboard",
+  "Bass Guitar",
+  "Drums",
+];
+
+// Adds another role for an instrument, scoped to one team. The first time a
+// second role is added for a previously-singular instrument (e.g. "Drums"),
+// the original role is renumbered to "Drums 1" so the new one can be
+// "Drums 2". Vocals is already numbered from the seed data, so it just gets
+// the next number.
+export async function addRole(instrument: string, teamId: string) {
+  if (!INSTRUMENTS_FOR_ROLES.includes(instrument) || !teamId) return;
+
+  const supabase = await createClient();
+  const { data: existingRoles } = await supabase
+    .from("roles")
+    .select("id, name, sort_order")
+    .eq("instrument", instrument)
+    .order("sort_order");
+
+  const rows = existingRoles ?? [];
+  const numberedPattern = new RegExp(`^${instrument.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} (\\d+)$`);
+  const numbers = rows
+    .map((r) => {
+      const m = r.name.match(numberedPattern);
+      return m ? Number(m[1]) : null;
+    })
+    .filter((n): n is number => n !== null);
+
+  if (rows.length === 1 && numbers.length === 0) {
+    await supabase.from("roles").update({ name: `${instrument} 1` }).eq("id", rows[0].id);
+    numbers.push(1);
+  }
+
+  const nextNumber = numbers.length > 0 ? Math.max(...numbers) + 1 : 1;
+  const maxSortOrder = rows.reduce((max, r) => Math.max(max, r.sort_order), -1);
+
+  await supabase.from("roles").insert({
+    name: `${instrument} ${nextNumber}`,
+    instrument,
+    team_id: teamId,
+    sort_order: maxSortOrder + 1,
+  });
+
+  revalidatePath("/", "layout");
 }
 
 const INSTRUMENTS = [

@@ -57,7 +57,7 @@ export default async function Home() {
   const [{ data: teams }, { data: roles }, { data: volunteers }, { data: assignments }, { data: playlists }, { data: songs }] =
     await Promise.all([
       supabase.from("teams").select("id, name").order("sort_order"),
-      supabase.from("roles").select("id, name").order("sort_order"),
+      supabase.from("roles").select("id, name, team_id").order("sort_order"),
       supabase.from("volunteers").select("id, name, nickname").order("name"),
       supabase.from("service_lineup_assignments").select("team_id, role_id, person_id").eq("service_id", service.id),
       supabase.from("playlists").select("id, url").eq("service_id", service.id).order("created_at"),

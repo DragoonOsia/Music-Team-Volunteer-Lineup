@@ -5,7 +5,7 @@ import { updateServiceLineupAssignment } from "@/lib/actions";
 import VolunteerCombobox from "@/components/VolunteerCombobox";
 
 type Team = { id: string; name: string };
-type Role = { id: string; name: string; instrument: string | null };
+type Role = { id: string; name: string; instrument: string | null; team_id: string | null };
 type Volunteer = { id: string; name: string; nickname: string | null; instruments: string[] };
 type Assignment = { team_id: string; role_id: string; person_id: string | null };
 
@@ -24,6 +24,12 @@ export default function ServiceLineupTabs({
 }) {
   const [activeTeamId, setActiveTeamId] = useState(teams[0]?.id ?? "");
 
+  // A role with a team_id only belongs to that one team; a null team_id
+  // (the original design) belongs to every team.
+  const visibleRoles = roles.filter(
+    (r) => r.team_id === null || r.team_id === activeTeamId
+  );
+
   const assignmentByRole = new Map(
     assignments
       .filter((a) => a.team_id === activeTeamId)
@@ -38,7 +44,7 @@ export default function ServiceLineupTabs({
   const EXEMPT_INSTRUMENTS = new Set(["Vocals", "Musical Director"]);
   const bookedElsewhereNonExempt = (roleId: string) =>
     new Set(
-      roles
+      visibleRoles
         .filter((r) => !EXEMPT_INSTRUMENTS.has(r.instrument ?? "") && r.id !== roleId)
         .map((r) => assignmentByRole.get(r.id))
         .filter((id): id is string => Boolean(id))
@@ -63,7 +69,7 @@ export default function ServiceLineupTabs({
       </div>
 
       <div className="divide-y divide-rule">
-        {roles.map((role) => {
+        {visibleRoles.map((role) => {
           // Exempt roles (Vocals, Musical Director) show everyone who has the
           // skill, full stop - an instrument booking elsewhere never hides
           // them here. Only non-exempt (real instrument) roles exclude people
@@ -96,7 +102,7 @@ export default function ServiceLineupTabs({
             </div>
           );
         })}
-        {roles.length === 0 && (
+        {visibleRoles.length === 0 && (
           <p className="py-6 text-center text-sm text-ink3 italic">
             No roles set up yet.
           </p>

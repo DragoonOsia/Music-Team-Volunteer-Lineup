@@ -20,7 +20,6 @@
   "18": "Project Description (README)",
   "19": "ServiceLineupTabs.tsx",
   "20": "include",
-  "21": "server.ts",
-  "22": "volunteers/page.tsx",
-  "23": "SongList.tsx"
+  "21": "app/page.tsx",
+  "22": "SongList.tsx"
 }

@@ -15,7 +15,7 @@ type Song = {
 };
 type Playlist = { url: string };
 type Team = { id: string; name: string };
-type Role = { id: string; name: string };
+type Role = { id: string; name: string; team_id: string | null };
 type Volunteer = { id: string; name: string; nickname: string | null };
 type Assignment = { team_id: string; role_id: string; person_id: string | null };
 
@@ -46,6 +46,10 @@ function anchorName(data: ShareData, song: Song): string | null {
   if (!song.anchor_id) return null;
   const v = data.volunteers.find((v) => v.id === song.anchor_id);
   return v ? v.nickname || v.name : null;
+}
+
+function rolesForTeam(data: ShareData, teamId: string): Role[] {
+  return data.roles.filter((r) => r.team_id === null || r.team_id === teamId);
 }
 
 function songMeta(song: Song): string {
@@ -82,7 +86,7 @@ function buildShareText(data: ShareData): string {
 
   data.teams.forEach((team) => {
     lines.push("", team.name.toUpperCase());
-    data.roles.forEach((role) => {
+    rolesForTeam(data, team.id).forEach((role) => {
       lines.push(`${role.name}: ${assignedName(data, team.id, role.id)}`);
     });
   });
@@ -172,7 +176,7 @@ async function downloadAsImage(data: ShareData) {
 
   data.teams.forEach((team) => {
     plan.push({ kind: "spacer" }, { kind: "section", text: team.name.toUpperCase() });
-    data.roles.forEach((role) => {
+    rolesForTeam(data, team.id).forEach((role) => {
       plan.push({ kind: "role", label: role.name, value: assignedName(data, team.id, role.id) });
     });
   });

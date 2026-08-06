@@ -51,7 +51,7 @@ export default async function ServiceDetailPage({
         .order("created_at"),
       supabase.from("playlists").select("id, url").eq("service_id", id).order("created_at"),
       supabase.from("teams").select("id, name").order("sort_order"),
-      supabase.from("roles").select("id, name, instrument").order("sort_order"),
+      supabase.from("roles").select("id, name, instrument, team_id").order("sort_order"),
       supabase.from("volunteers").select("id, name, nickname, instruments").order("name"),
       supabase.from("service_lineup_assignments").select("team_id, role_id, person_id").eq("service_id", id),
     ]);
@@ -93,7 +93,11 @@ export default async function ServiceDetailPage({
 
       <div className="flex flex-wrap items-center gap-2">
         <AddSongModal serviceId={service.id} vocalists={lineupVocalists} />
-        <ServiceActionsMenu serviceId={service.id} archived={service.archived} />
+        <ServiceActionsMenu
+          serviceId={service.id}
+          archived={service.archived}
+          teams={teams ?? []}
+        />
         <ShareMenu
           dateLabel={formatDate(service.service_date)}
           title={service.title}

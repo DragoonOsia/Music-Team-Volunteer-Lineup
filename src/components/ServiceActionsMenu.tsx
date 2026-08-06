@@ -3,15 +3,21 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { resetServiceSongs, archiveService, unarchiveService } from "@/lib/actions";
+import AddRoleModal from "@/components/AddRoleModal";
+
+type Team = { id: string; name: string };
 
 export default function ServiceActionsMenu({
   serviceId,
   archived,
+  teams,
 }: {
   serviceId: string;
   archived: boolean;
+  teams: Team[];
 }) {
   const [open, setOpen] = useState(false);
+  const [addRoleOpen, setAddRoleOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -54,6 +60,15 @@ export default function ServiceActionsMenu({
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="absolute right-0 z-50 mt-1 w-48 rounded-lg border border-rule border-t-2 border-t-rule-strong bg-card py-1">
             <button
+              onClick={() => {
+                setOpen(false);
+                setAddRoleOpen(true);
+              }}
+              className="flex min-h-11 w-full items-center px-3 py-2 text-left font-mono text-[11px] font-medium tracking-[0.14em] text-ink2 uppercase hover:text-ink sm:min-h-0"
+            >
+              Add Role
+            </button>
+            <button
               onClick={handleArchiveToggle}
               className="flex min-h-11 w-full items-center px-3 py-2 text-left font-mono text-[11px] font-medium tracking-[0.14em] text-ink2 uppercase hover:text-ink sm:min-h-0"
             >
@@ -68,6 +83,7 @@ export default function ServiceActionsMenu({
           </div>
         </>
       )}
+      <AddRoleModal open={addRoleOpen} onClose={() => setAddRoleOpen(false)} teams={teams} />
     </div>
   );
 }

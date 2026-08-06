@@ -32,20 +32,36 @@ export type Database = {
         Relationships: [];
       };
       roles: {
-        Row: { id: string; name: string; instrument: string | null; sort_order: number };
+        Row: {
+          id: string;
+          name: string;
+          instrument: string | null;
+          team_id: string | null;
+          sort_order: number;
+        };
         Insert: {
           id?: string;
           name: string;
           instrument?: string | null;
+          team_id?: string | null;
           sort_order?: number;
         };
         Update: {
           id?: string;
           name?: string;
           instrument?: string | null;
+          team_id?: string | null;
           sort_order?: number;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "roles_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       services: {
         Row: {

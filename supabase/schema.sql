@@ -31,6 +31,10 @@ create table if not exists roles (
   sort_order integer not null default 0
 );
 alter table roles add column if not exists instrument text;
+-- Null means the role applies to every team (the original design). A role
+-- can also be scoped to just one team, e.g. an extra guitarist only PM
+-- Team needs - added via the "Add Role" action.
+alter table roles add column if not exists team_id uuid references teams(id) on delete cascade;
 update roles set name = 'Keyboard', instrument = 'Keyboard' where name = 'Keys';
 update roles set name = 'Bass Guitar', instrument = 'Bass Guitar' where name = 'Bass';
 update roles set instrument = 'Vocals' where name in ('Vocals 1', 'Vocals 2', 'Vocals 3');
