@@ -63,8 +63,14 @@ function songMeta(song: Song): string {
     .join(" · ");
 }
 
-function buildShareText(data: ShareData): string {
-  const lines: string[] = [];
+// A line is either plain text or a link. Keeping them as structured lines
+// lets the same content render as plain text (URL spelled out, so nothing is
+// lost when pasted somewhere that strips formatting) and as HTML (a real
+// "link" anchor for rich-text targets like Gmail or Docs).
+type ShareLine = string | { url: string };
+
+function buildShareLines(data: ShareData): ShareLine[] {
+  const lines: ShareLine[] = [];
   lines.push(data.dateLabel + (data.title ? ` — ${data.title}` : ""));
 
   if (data.songs.length > 0) {
@@ -81,7 +87,7 @@ function buildShareText(data: ShareData): string {
 
   if (data.playlists.length > 0) {
     lines.push("", "PLAYLIST");
-    data.playlists.forEach((p) => lines.push(p.url));
+    data.playlists.forEach((p) => lines.push({ url: p.url }));
   }
 
   data.teams.forEach((team) => {
@@ -91,7 +97,50 @@ function buildShareText(data: ShareData): string {
     });
   });
 
-  return lines.join("\n").trim();
+  return lines;
+}
+
+function linesToPlainText(lines: ShareLine[]): string {
+  return lines
+    .map((line) => (typeof line === "string" ? line : line.url))
+    .join("\n")
+    .trim();
+}
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function linesToHtml(lines: ShareLine[]): string {
+  const body = lines
+    .map((line) =>
+      typeof line === "string"
+        ? escapeHtml(line)
+        : `<a href="${escapeHtml(line.url)}">link</a>`
+    )
+    .join("\n")
+    .trim();
+  return `<pre style="font-family:inherit;white-space:pre-wrap">${body}</pre>`;
+}
+
+async function copyShare(lines: ShareLine[]) {
+  const text = linesToPlainText(lines);
+  // Rich + plain flavors together: rich-text targets get the "link" anchor,
+  // plain-text targets fall back to the spelled-out URL.
+  if (typeof ClipboardItem !== "undefined" && navigator.clipboard?.write) {
+    try {
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "text/html": new Blob([linesToHtml(lines)], { type: "text/html" }),
+          "text/plain": new Blob([text], { type: "text/plain" }),
+        }),
+      ]);
+      return;
+    } catch {
+      // Fall through to the plain-text path below.
+    }
+  }
+  await navigator.clipboard.writeText(text);
 }
 
 // Fixed light palette, matching the app's "always paper, regardless of
@@ -107,7 +156,7 @@ type DrawLine =
   | { kind: "eyebrow"; text: string }
   | { kind: "title"; text: string }
   | { kind: "subtitle"; text: string }
-  | { kind: "section"; text: string }
+  | { kind: "section"; text: string; trailing?: RoleCell }
   | { kind: "song"; text: string }
   | { kind: "songAnchor"; text: string }
   | { kind: "songSub"; text: string }
@@ -116,18 +165,25 @@ type DrawLine =
 
 type RoleCell = { label: string; value: string };
 
-// Roles are laid out in two columns, matching the Lineup page: Musical
-// Director and the numbered Vocals on the left, everything else on the right.
-const LEFT_COLUMN_ROLES = new Set(["Musical Director", "Vocals 1", "Vocals 2", "Vocals 3"]);
+// A role can be renumbered once a second one is added ("Drums" -> "Drums 1"),
+// so match on the base instrument name rather than an exact string.
+function isRole(name: string, base: string) {
+  return name === base || name.startsWith(`${base} `);
+}
 
-const ROLE_ROW_HEIGHT = 26;
+// In the exported image the Musical Director is pulled out beside the team
+// header, leaving the vocals + acoustic guitar on the left and the rest of
+// the band on the right so the two columns stay balanced.
+const IMAGE_LEFT_COLUMN = ["Vocals", "Acoustic Guitar"];
+
+const ROLE_ROW_HEIGHT = 30;
 
 const LINE_HEIGHT: Record<Exclude<DrawLine["kind"], "roleGrid">, number> = {
   eyebrow: 32,
   title: 36,
   subtitle: 28,
-  section: 34,
-  song: 26,
+  section: 38,
+  song: 23,
   songAnchor: 22,
   songSub: 22,
   spacer: 14,
@@ -176,22 +232,34 @@ async function downloadAsImage(data: ShareData) {
     });
   }
 
-  if (data.playlists.length > 0) {
-    plan.push({ kind: "spacer" }, { kind: "section", text: "PLAYLIST" });
-    data.playlists.forEach((p) => plan.push({ kind: "songSub", text: p.url }));
-  }
+  // The playlist link is deliberately left out of the image - a URL isn't
+  // clickable in a screenshot, and it's still in the Copy as Text version.
 
   data.teams.forEach((team) => {
-    plan.push({ kind: "spacer" }, { kind: "section", text: team.name.toUpperCase() });
     const teamRoles = rolesForTeam(data, team.id);
     const toCell = (role: Role): RoleCell => ({
       label: role.name,
       value: assignedName(data, team.id, role.id),
     });
+    const director = teamRoles.find((r) => isRole(r.name, "Musical Director"));
+    const columnRoles = teamRoles.filter((r) => r !== director);
+
+    plan.push(
+      { kind: "spacer" },
+      {
+        kind: "section",
+        text: team.name.toUpperCase(),
+        trailing: director ? toCell(director) : undefined,
+      }
+    );
     plan.push({
       kind: "roleGrid",
-      left: teamRoles.filter((r) => LEFT_COLUMN_ROLES.has(r.name)).map(toCell),
-      right: teamRoles.filter((r) => !LEFT_COLUMN_ROLES.has(r.name)).map(toCell),
+      left: columnRoles
+        .filter((r) => IMAGE_LEFT_COLUMN.some((base) => isRole(r.name, base)))
+        .map(toCell),
+      right: columnRoles
+        .filter((r) => !IMAGE_LEFT_COLUMN.some((base) => isRole(r.name, base)))
+        .map(toCell),
     });
   });
 
@@ -248,20 +316,37 @@ async function downloadAsImage(data: ShareData) {
           y += LINE_HEIGHT.subtitle;
         });
         break;
-      case "section":
-        ctx.font = '600 13px "IBM Plex Mono"';
+      case "section": {
+        ctx.font = '600 17px "IBM Plex Mono"';
         ctx.fillStyle = INK3;
         ctx.fillText(line.text, paddingX, y);
+        // The Musical Director rides on the team header line, in accent
+        // colour, so it reads as the lead rather than one row among many.
+        if (line.trailing) {
+          const label = line.trailing.label.toUpperCase();
+          ctx.font = '600 12px "IBM Plex Mono"';
+          const labelWidth = ctx.measureText(label).width;
+          ctx.font = '600 19px "Newsreader"';
+          const valueWidth = ctx.measureText(line.trailing.value).width;
+          const startX = width - paddingX - (labelWidth + 12 + valueWidth);
+          ctx.font = '600 12px "IBM Plex Mono"';
+          ctx.fillStyle = ACCENT;
+          ctx.fillText(label, startX, y + 5);
+          ctx.font = '600 19px "Newsreader"';
+          ctx.fillStyle = ACCENT;
+          ctx.fillText(line.trailing.value, startX + labelWidth + 12, y);
+        }
         ctx.strokeStyle = RULE;
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(paddingX, y + 22);
-        ctx.lineTo(width - paddingX, y + 22);
+        ctx.moveTo(paddingX, y + 26);
+        ctx.lineTo(width - paddingX, y + 26);
         ctx.stroke();
         y += LINE_HEIGHT.section;
         break;
+      }
       case "song":
-        ctx.font = '500 19px "Newsreader"';
+        ctx.font = '500 16px "Newsreader"';
         ctx.fillStyle = INK;
         ctx.fillText(line.text, paddingX, y);
         y += LINE_HEIGHT.song;
@@ -284,12 +369,12 @@ async function downloadAsImage(data: ShareData) {
         const columnGap = 40;
         const columnWidth = (contentWidth - columnGap) / 2;
         const drawCell = (cell: RoleCell, x: number, rowY: number) => {
-          ctx.font = '600 11px "IBM Plex Mono"';
+          ctx.font = '600 13px "IBM Plex Mono"';
           ctx.fillStyle = INK3;
           const label = cell.label.toUpperCase();
           const labelWidth = ctx.measureText(label).width;
-          ctx.fillText(label, x, rowY + 4);
-          ctx.font = '400 16px "Newsreader"';
+          ctx.fillText(label, x, rowY + 5);
+          ctx.font = '400 19px "Newsreader"';
           ctx.fillStyle = INK;
           ctx.fillText(cell.value, x + labelWidth + 12, rowY);
         };
@@ -336,7 +421,7 @@ export default function ShareMenu(props: ShareData) {
   async function handleCopyText() {
     setOpen(false);
     try {
-      await navigator.clipboard.writeText(buildShareText(scopedData()));
+      await copyShare(buildShareLines(scopedData()));
       flashFeedback("Copied!");
     } catch {
       flashFeedback("Couldn't copy");
