@@ -38,13 +38,14 @@ export default function SongList({
   volunteers: Vocalist[];
 }) {
   const [songs, setSongs] = useState(initialSongs);
-  // Re-sync from fresh server data (song added/edited/removed elsewhere)
-  // without stomping an in-progress drag - same "adjust state during
-  // render" pattern used by VolunteerCombobox, no Effect needed.
-  const [lastSeenIds, setLastSeenIds] = useState(() => initialSongs.map((s) => s.id).join(","));
-  const currentIds = initialSongs.map((s) => s.id).join(",");
-  if (currentIds !== lastSeenIds) {
-    setLastSeenIds(currentIds);
+  // Re-sync whenever the server data differs at all - not just when the set
+  // of ids changes, or editing a song (same ids, new contents) would keep
+  // rendering the stale local copy. Uses React's "adjust state during
+  // render" pattern, same as VolunteerCombobox, so no Effect is needed.
+  const serverKey = JSON.stringify(initialSongs);
+  const [lastSeenKey, setLastSeenKey] = useState(serverKey);
+  if (serverKey !== lastSeenKey) {
+    setLastSeenKey(serverKey);
     setSongs(initialSongs);
   }
 

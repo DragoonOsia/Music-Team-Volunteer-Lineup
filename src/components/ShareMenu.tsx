@@ -73,7 +73,7 @@ function buildShareText(data: ShareData): string {
       const meta = songMeta(song);
       const anchor = anchorName(data, song);
       lines.push(`${i + 1}. ${song.name}${meta ? ` (${meta})` : ""}`);
-      if (anchor) lines.push(`   ⚓ ANCHOR: ${anchor}`);
+      if (anchor) lines.push(`   ANCHOR: ${anchor}`);
       const sub = [song.singer_or_band, song.version].filter(Boolean).join(" — ");
       if (sub) lines.push(`   ${sub}`);
     });
@@ -111,18 +111,25 @@ type DrawLine =
   | { kind: "song"; text: string }
   | { kind: "songAnchor"; text: string }
   | { kind: "songSub"; text: string }
-  | { kind: "role"; label: string; value: string }
+  | { kind: "roleGrid"; left: RoleCell[]; right: RoleCell[] }
   | { kind: "spacer" };
 
-const LINE_HEIGHT: Record<DrawLine["kind"], number> = {
-  eyebrow: 26,
-  title: 46,
+type RoleCell = { label: string; value: string };
+
+// Roles are laid out in two columns, matching the Lineup page: Musical
+// Director and the numbered Vocals on the left, everything else on the right.
+const LEFT_COLUMN_ROLES = new Set(["Musical Director", "Vocals 1", "Vocals 2", "Vocals 3"]);
+
+const ROLE_ROW_HEIGHT = 26;
+
+const LINE_HEIGHT: Record<Exclude<DrawLine["kind"], "roleGrid">, number> = {
+  eyebrow: 32,
+  title: 36,
   subtitle: 28,
   section: 34,
   song: 26,
   songAnchor: 22,
   songSub: 22,
-  role: 26,
   spacer: 14,
 };
 
@@ -163,7 +170,7 @@ async function downloadAsImage(data: ShareData) {
       const meta = songMeta(song);
       const anchor = anchorName(data, song);
       plan.push({ kind: "song", text: `${i + 1}. ${song.name}${meta ? `  (${meta})` : ""}` });
-      if (anchor) plan.push({ kind: "songAnchor", text: `⚓ ANCHOR: ${anchor}` });
+      if (anchor) plan.push({ kind: "songAnchor", text: `ANCHOR: ${anchor}` });
       const sub = [song.singer_or_band, song.version].filter(Boolean).join(" — ");
       if (sub) plan.push({ kind: "songSub", text: sub });
     });
@@ -176,8 +183,15 @@ async function downloadAsImage(data: ShareData) {
 
   data.teams.forEach((team) => {
     plan.push({ kind: "spacer" }, { kind: "section", text: team.name.toUpperCase() });
-    rolesForTeam(data, team.id).forEach((role) => {
-      plan.push({ kind: "role", label: role.name, value: assignedName(data, team.id, role.id) });
+    const teamRoles = rolesForTeam(data, team.id);
+    const toCell = (role: Role): RoleCell => ({
+      label: role.name,
+      value: assignedName(data, team.id, role.id),
+    });
+    plan.push({
+      kind: "roleGrid",
+      left: teamRoles.filter((r) => LEFT_COLUMN_ROLES.has(r.name)).map(toCell),
+      right: teamRoles.filter((r) => !LEFT_COLUMN_ROLES.has(r.name)).map(toCell),
     });
   });
 
@@ -186,7 +200,9 @@ async function downloadAsImage(data: ShareData) {
   const wrapped: { line: DrawLine; extraLines: string[] }[] = [];
   for (const line of plan) {
     let extraLines: string[] = [];
-    if (line.kind === "songSub" || line.kind === "subtitle") {
+    if (line.kind === "roleGrid") {
+      height += Math.max(line.left.length, line.right.length) * ROLE_ROW_HEIGHT;
+    } else if (line.kind === "songSub" || line.kind === "subtitle") {
       measureCtx.font =
         line.kind === "subtitle" ? 'italic 400 18px "Newsreader"' : '400 14px "Newsreader"';
       extraLines = wrapText(measureCtx, line.text, contentWidth);
@@ -213,13 +229,13 @@ async function downloadAsImage(data: ShareData) {
     ctx.textBaseline = "top";
     switch (line.kind) {
       case "eyebrow":
-        ctx.font = '600 12px "IBM Plex Mono"';
+        ctx.font = '600 18px "IBM Plex Mono"';
         ctx.fillStyle = ACCENT;
         ctx.fillText(line.text, paddingX, y);
         y += LINE_HEIGHT.eyebrow;
         break;
       case "title":
-        ctx.font = '500 34px "Newsreader"';
+        ctx.font = '500 26px "Newsreader"';
         ctx.fillStyle = INK;
         ctx.fillText(line.text, paddingX, y);
         y += LINE_HEIGHT.title;
@@ -264,18 +280,26 @@ async function downloadAsImage(data: ShareData) {
           y += LINE_HEIGHT.songSub;
         });
         break;
-      case "role":
-        ctx.font = '600 11px "IBM Plex Mono"';
-        ctx.fillStyle = INK3;
-        ctx.fillText(line.label.toUpperCase(), paddingX, y + 4);
-        {
-          const labelWidth = ctx.measureText(line.label.toUpperCase()).width;
+      case "roleGrid": {
+        const columnGap = 40;
+        const columnWidth = (contentWidth - columnGap) / 2;
+        const drawCell = (cell: RoleCell, x: number, rowY: number) => {
+          ctx.font = '600 11px "IBM Plex Mono"';
+          ctx.fillStyle = INK3;
+          const label = cell.label.toUpperCase();
+          const labelWidth = ctx.measureText(label).width;
+          ctx.fillText(label, x, rowY + 4);
           ctx.font = '400 16px "Newsreader"';
           ctx.fillStyle = INK;
-          ctx.fillText(line.value, paddingX + labelWidth + 12, y);
-        }
-        y += LINE_HEIGHT.role;
+          ctx.fillText(cell.value, x + labelWidth + 12, rowY);
+        };
+        line.left.forEach((cell, row) => drawCell(cell, paddingX, y + row * ROLE_ROW_HEIGHT));
+        line.right.forEach((cell, row) =>
+          drawCell(cell, paddingX + columnWidth + columnGap, y + row * ROLE_ROW_HEIGHT)
+        );
+        y += Math.max(line.left.length, line.right.length) * ROLE_ROW_HEIGHT;
         break;
+      }
       case "spacer":
         y += LINE_HEIGHT.spacer;
         break;

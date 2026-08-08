@@ -286,12 +286,14 @@ export async function addSong(serviceId: string, formData: FormData) {
     ...parseTimeSignature(formData),
   });
   revalidatePath(`/services/${serviceId}`);
+  revalidatePath("/");
 }
 
 export async function deleteSong(serviceId: string, songId: string) {
   const supabase = await createClient();
   await supabase.from("songs").delete().eq("id", songId);
   revalidatePath(`/services/${serviceId}`);
+  revalidatePath("/");
 }
 
 export async function updateSong(serviceId: string, songId: string, formData: FormData) {
@@ -321,6 +323,7 @@ export async function updateSong(serviceId: string, songId: string, formData: Fo
     })
     .eq("id", songId);
   revalidatePath(`/services/${serviceId}`);
+  revalidatePath("/");
 }
 
 export async function reorderSongs(serviceId: string, orderedSongIds: string[]) {
@@ -331,6 +334,7 @@ export async function reorderSongs(serviceId: string, orderedSongIds: string[]) 
     )
   );
   revalidatePath(`/services/${serviceId}`);
+  revalidatePath("/");
 }
 
 // "Reset Lineup" on a service clears its setlist back to empty.
@@ -338,6 +342,7 @@ export async function resetServiceSongs(serviceId: string) {
   const supabase = await createClient();
   await supabase.from("songs").delete().eq("service_id", serviceId);
   revalidatePath(`/services/${serviceId}`);
+  revalidatePath("/");
 }
 
 export async function addPlaylist(serviceId: string, formData: FormData) {
@@ -347,6 +352,7 @@ export async function addPlaylist(serviceId: string, formData: FormData) {
   const supabase = await createClient();
   await supabase.from("playlists").insert({ service_id: serviceId, url });
   revalidatePath(`/services/${serviceId}`);
+  revalidatePath("/");
 }
 
 export async function updatePlaylist(serviceId: string, playlistId: string, formData: FormData) {
@@ -356,10 +362,12 @@ export async function updatePlaylist(serviceId: string, playlistId: string, form
   const supabase = await createClient();
   await supabase.from("playlists").update({ url }).eq("id", playlistId);
   revalidatePath(`/services/${serviceId}`);
+  revalidatePath("/");
 }
 
 export async function deletePlaylist(serviceId: string, playlistId: string) {
   const supabase = await createClient();
   await supabase.from("playlists").delete().eq("id", playlistId);
   revalidatePath(`/services/${serviceId}`);
+  revalidatePath("/");
 }
