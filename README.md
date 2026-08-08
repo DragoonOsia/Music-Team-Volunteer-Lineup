@@ -24,6 +24,7 @@ A free, self-hosted scheduling tool for a church worship/music team. Built with 
 - [Tailwind CSS v4](https://tailwindcss.com/) for styling ("Hymnal" theme — Newsreader + IBM Plex Mono, with Day/Night modes)
 - [Vercel](https://vercel.com/) for hosting
 - [TypeScript](https://www.typescriptlang.org/)
+- [Claude Code](https://claude.com/claude-code) (Anthropic) — the app was designed, built, and is maintained with it, paired with [graphify](graphify-out/) for codebase context
 
 All free-tier — this project is designed to run at zero cost.
 
